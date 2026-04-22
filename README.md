@@ -15,6 +15,7 @@
 - **主题代码**：遵循原项目 [MIT License](LICENSE)，原作者为 [L33Z22L11](https://github.com/L33Z22L11)
 - **原作者文章**：受 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans) 保护，本仓库已移除全部原作者文章，不做任何转载
 - **本站文章**：由 maksim 原创，保留所有权利
+- **注**: 本人目前忙于找实习， 暂时不为网站部署和弄域名。
 
 ## 快速开始
 
