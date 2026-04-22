@@ -10,6 +10,14 @@
 	}
 }
 
+@font-face {
+	font-family: "AlimamaFangYuanTi";
+	font-style: normal;
+	font-weight: 400;
+	src: url("../fonts/AlimamaFangYuanTi.woff2") format("woff2");
+	font-display: swap;
+}
+
 /* autoprefixer: ignore next */
 // 仅在 Chrome 130+ 启用本地可变字体
 @supports (box-decoration-break: clone) {

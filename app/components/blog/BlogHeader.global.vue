@@ -67,11 +67,6 @@ const appConfig = useAppConfig()
 	}
 }
 
-@font-face {
-	font-family: AlimamaFangYuanTi;
-	src: url("/fonts/AlimamaFangYuanTi.woff2");
-}
-
 .header-title {
 	font-family: AlimamaFangYuanTi, "Noto Sans SC", sans-serif;
 	font-size: 1.5em;

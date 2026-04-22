@@ -18,17 +18,48 @@
 <style lang="scss">
 #blog-root {
 	display: flex;
+	position: relative;
 	justify-content: center;
 	gap: 1rem;
 	min-width: 0;
+	padding: 1rem;
+	isolation: isolate;
+
+	&::before,
+	&::after {
+		content: "";
+		position: fixed;
+		border-radius: 50%;
+		filter: blur(80px);
+		pointer-events: none;
+		z-index: -2;
+	}
+
+	&::before {
+		top: -12rem;
+		left: min(-6rem, -5vw);
+		width: min(34rem, 40vw);
+		height: min(34rem, 40vw);
+		background:
+			radial-gradient(circle at 30% 30%, hsl(24deg 100% 70% / 30%), transparent 58%),
+			radial-gradient(circle at 65% 65%, hsl(190deg 100% 55% / 22%), transparent 62%);
+	}
+
+	&::after {
+		right: min(-6rem, -5vw);
+		bottom: -10rem;
+		width: min(28rem, 32vw);
+		height: min(28rem, 32vw);
+		background: radial-gradient(circle, hsl(198deg 100% 52% / 18%), transparent 62%);
+	}
 }
 
 #blog-sidebar, #blog-aside {
 	flex: 0 0 280px; // 防止搜索框 grow
 	position: sticky;
-	top: 0;
-	height: 100vh;
-	height: 100dvh;
+	top: 1rem;
+	height: calc(100vh - 1rem);
+	height: calc(100dvh - 1rem);
 	min-width: 0; // 防止搜索框撑开页面
 	scrollbar-width: thin;
 
@@ -43,12 +74,13 @@
 
 	// 若设置的是 max-width，则内部 main 宽度为 fit-content，可能无法撑满
 	// 此时即使设置 flex-grow，也会影响 #sidebar 无法正确 shrink
-	width: $breakpoint-widescreen;
+	width: min(calc(100vw - 2rem), #{$breakpoint-widescreen});
 	min-width: 0; // 解决父级 flexbox 设置 justify-content: center 时溢出左侧消失的问题
 
 	// 此处不建议给内容设置 padding
 	> #main-content {
 		flex-grow: 1; // 使较小宽度的内容占满
+		position: relative;
 
 		// overflow: hidden; // 会使一部分元素吸顶失效
 

@@ -46,8 +46,8 @@ export function getArchIcon(arch: Arch) {
 /** BlogTech Widget 构建平台图标映射 */
 // @keep-sorted
 export const ciIcons: Record<string, string> = {
-	'Cloudflare Pages': 'devicon:cloudflare',
-	'Cloudflare Workers': 'devicon:cloudflareworkers',
+	'Cloudflare Pages': 'simple-icons:cloudflare',
+	'Cloudflare Workers': 'simple-icons:cloudflare',
 	'EdgeOne': 'https://edgeone.ai/favicon.ico',
 	'GitHub Actions': 'ri:github-fill',
 	'Netlify CI': 'catppuccin:netlify',

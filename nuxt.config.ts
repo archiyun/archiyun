@@ -13,6 +13,8 @@ function pluginPath(path: string) {
 	return pathToFileURL(resolve(`./remark-plugins/${path}.ts`)).href
 }
 
+const defaultOgImage = new URL('/og-default.svg', blogConfig.url).toString()
+
 // 此处配置无需修改
 export default defineNuxtConfig({
 	app: {
@@ -23,6 +25,12 @@ export default defineNuxtConfig({
 				// 此处为元数据的生成器标识，不建议修改
 				{ 'name': 'generator', 'content': `${pascalCase(packageJson.name)} ${packageJson.version}`, 'data-github-repo': packageJson.homepage },
 				{ name: 'mobile-web-app-capable', content: 'yes' },
+				{ property: 'og:image', content: defaultOgImage },
+				{ property: 'og:image:type', content: 'image/svg+xml' },
+				{ property: 'og:image:width', content: '1200' },
+				{ property: 'og:image:height', content: '630' },
+				{ name: 'twitter:card', content: 'summary_large_image' },
+				{ name: 'twitter:image', content: defaultOgImage },
 			],
 			link: [
 				{ rel: 'icon', href: blogConfig.favicon },
@@ -88,6 +96,7 @@ export default defineNuxtConfig({
 		'/api/stats': { prerender: true, headers: { 'Content-Type': 'application/json' } },
 		'/atom.xml': { prerender: true, headers: { 'Content-Type': 'application/xml' } },
 		'/favicon.ico': { redirect: { to: blogConfig.favicon } },
+		'/og-default.svg': { prerender: true, headers: { 'Content-Type': 'image/svg+xml' } },
 		'/zhilu.opml': { prerender: true, headers: { 'Content-Type': 'application/xml' } },
 	},
 

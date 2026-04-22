@@ -8,36 +8,14 @@ const appConfig = useAppConfig()
 const showAllDate = isTimeDiffSignificant(props.date, props.updated)
 
 const categoryLabel = computed(() => props.categories?.[0])
-const categoryColor = computed(() => appConfig.article.categories[categoryLabel.value!]?.color)
+const categoryColor = computed(() => appConfig.article.categories[categoryLabel.value!]?.color || 'var(--c-primary)')
 const categoryIcon = computed(() => getCategoryIcon(categoryLabel.value))
 </script>
 
 <template>
-<UtilLink class="article-card card upraise">
-	<NuxtImg v-if="image" class="article-cover" :src="image" :alt="title" />
+<UtilLink class="article-card card upraise" :class="{ 'has-cover': image }">
 	<article>
-		<h2 class="article-title text-creative">
-			{{ title }}
-		</h2>
-
-		<p v-if="description" class="article-description">
-			{{ description }}
-		</p>
-
-		<div class="article-info">
-			<UtilDate
-				v-if="date && (showAllDate || !useUpdated)"
-				:date
-				icon="tabler:pencil-minus"
-			/>
-
-			<UtilDate
-				v-if="updated && (showAllDate || useUpdated)"
-				:class="{ 'use-updated': useUpdated }"
-				:date="updated"
-				icon="tabler:clock-edit"
-			/>
-
+		<div v-if="categoryLabel || (updated && useUpdated)" class="article-topline">
 			<span
 				v-if="categoryLabel"
 				class="article-category"
@@ -47,35 +25,90 @@ const categoryIcon = computed(() => getCategoryIcon(categoryLabel.value))
 				{{ categoryLabel }}
 			</span>
 
-			<span v-if="readingTime?.words" class="article-words">
-				<Icon name="tabler:pilcrow" />
-				{{ formatNumber(readingTime?.words) }}字
+			<span v-if="updated && useUpdated" class="article-updated-tip">
+				<Icon name="tabler:clock-edit" />
+				最近更新
 			</span>
 		</div>
+
+		<h2 class="article-title text-creative">
+			{{ title }}
+		</h2>
+
+		<p v-if="description" class="article-description">
+			{{ description }}
+		</p>
+
+		<div class="article-footer">
+			<div class="article-info">
+				<UtilDate
+					v-if="date && (showAllDate || !useUpdated)"
+					:date
+					icon="tabler:pencil-minus"
+				/>
+
+				<UtilDate
+					v-if="updated && (showAllDate || useUpdated)"
+					:class="{ 'use-updated': useUpdated }"
+					:date="updated"
+					icon="tabler:clock-edit"
+				/>
+
+				<span v-if="readingTime?.words" class="article-words">
+					<Icon name="tabler:pilcrow" />
+					{{ formatNumber(readingTime?.words) }}字
+				</span>
+			</div>
+
+			<div class="article-cta">
+				继续阅读
+				<Icon name="tabler:arrow-up-right" />
+			</div>
+		</div>
 	</article>
+	<NuxtImg v-if="image" class="article-cover" :src="image" :alt="title" />
 </UtilLink>
 </template>
 
 <style lang="scss" scoped>
 .article-card {
 	container-type: inline-size;
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 1rem;
 	position: relative;
+	overflow: hidden;
 	margin: 1em 0;
-	border-radius: 0.8em;
+	border: 1px solid var(--c-border);
+	border-radius: 1rem;
+	background:
+		linear-gradient(135deg, hsl(24deg 100% 70% / 7%), transparent 38%),
+		linear-gradient(180deg, var(--ld-bg-card), var(--c-bg-a50));
 	color: var(--c-text);
 	animation: float-in 0.2s var(--delay) backwards;
 
+	&.has-cover {
+		grid-template-columns: minmax(0, 1fr) clamp(12rem, 28%, 18rem);
+	}
+
 	> article {
 		display: grid;
-		gap: 0.5em;
-		padding: 1em;
+		gap: 0.85rem;
+		align-content: start;
+		padding: 1.15rem;
 	}
+}
+
+.article-topline {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.6rem;
 }
 
 .article-info {
 	display: flex;
 	flex-wrap: wrap;
-	gap: 0.5em clamp(1em, 5%, 1.5em);
+	gap: 0.5em clamp(1em, 4%, 1.35em);
 	font-size: 0.8em;
 	color: var(--c-text-2);
 
@@ -88,66 +121,89 @@ const categoryIcon = computed(() => getCategoryIcon(categoryLabel.value))
 	}
 }
 
+.article-footer {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.75rem 1rem;
+	margin-top: 0.25rem;
+}
+
 .article-title {
-	font-size: 1.2em;
+	font-size: clamp(1.25rem, 2.2vw, 1.5rem);
+	line-height: 1.15;
 	color: var(--c-text);
 }
 
 .article-description {
-	font-size: 0.9em;
+	display: -webkit-box;
+	overflow: hidden;
+	font-size: 0.95em;
+	line-height: 1.75;
 	color: var(--c-text-2);
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
 }
 
 .article-category {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35rem;
+	width: fit-content;
+	padding: 0.42rem 0.72rem;
+	border-radius: 999px;
+	background-color: color-mix(in srgb, var(--cg-color) 12%, transparent);
+	font-size: 0.82rem;
 	color: var(--cg-color);
 }
 
+.article-updated-tip {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35rem;
+	padding: 0.42rem 0.72rem;
+	border-radius: 999px;
+	background-color: var(--c-primary-soft);
+	font-size: 0.82rem;
+	color: var(--c-primary);
+}
+
+.article-cta {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35rem;
+	margin-inline-start: auto;
+	font-size: 0.86rem;
+	font-weight: 600;
+	color: var(--c-text-1);
+}
+
 .article-cover {
-	position: absolute;
-	opacity: 0.8;
-	inset-inline-end: 0;
-	top: 0;
-	width: calc(40% + 2em);
+	width: 100%;
 	height: 100%;
-	margin: 0;
-	mask-image: linear-gradient(to var(--end), transparent, #FFF 50%);
-	transition: opacity 0.2s;
+	min-height: 100%;
 	object-fit: cover;
+	transition: transform 0.35s, filter 0.35s;
+	filter: saturate(1.05) contrast(1.02);
 
-	:hover > & {
-		opacity: 1;
+	.article-card:hover > & {
+		transform: scale(1.03);
 	}
 
-	& + article {
-		position: relative;
-		width: 60%;
+	@container (max-width: #{$breakpoint-mobile}) {
+		min-height: 14rem;
+	}
+}
+
+@media (max-width: $breakpoint-mobile) {
+	.article-card.has-cover {
+		grid-template-columns: 1fr;
 	}
 
-	@mixin cover-narrow {
-		position: revert;
-		width: 100%;
-		height: auto;
-		max-width: none;
-		max-height: 256px;
-		aspect-ratio: 2.4;
-		margin-bottom: -10%;
-		mask-image: linear-gradient(#FFF 50%, transparent);
-
-		& + article {
-			width: auto;
-
-			> .article-title {
-				text-shadow: 0 0 0.2em var(--ld-bg-card), 0 0 0.5em var(--ld-bg-card), 0 0 1em var(--ld-bg-card);
-			}
-		}
-	}
-
-	@media (max-width: $breakpoint-phone) {
-		@include cover-narrow;
-	}
-
-	@container (max-width: #{$breakpoint-phone}) {
-		@include cover-narrow;
+	.article-cover {
+		order: -1;
+		aspect-ratio: 2.2;
 	}
 }
 </style>
