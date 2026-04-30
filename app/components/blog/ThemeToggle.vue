@@ -21,7 +21,7 @@ const colorMode = useColorMode()
 <style lang="scss" scoped>
 .theme-toggle {
 	display: flex;
-	gap: 3px;
+	gap: 2px;
 	width: fit-content;
 	margin: 0 auto;
 	padding: 2px;
@@ -30,19 +30,19 @@ const colorMode = useColorMode()
 	background-color: var(--c-bg-2);
 
 	> button {
-		padding: 4px 1rem;
+		padding: 4px 0.9rem;
 		border-radius: 1rem;
-		transition: all 0.1s;
+		transition: all 0.15s;
+		color: var(--c-text-3);
 
 		&:hover {
-			background-color: var(--c-bg-soft);
 			color: var(--c-text-1);
 		}
 
 		&.active {
-			box-shadow: var(--box-shadow-2);
+			box-shadow: var(--box-shadow-1);
 			background-color: var(--ld-bg-card);
-			color: var(--c-text-1);
+			color: var(--c-primary);
 			cursor: auto;
 		}
 	}

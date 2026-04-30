@@ -42,9 +42,8 @@ const { widgets } = useWidgets(asideWidgets)
 		:deep(.blog-widget) {
 			padding: 0.5rem;
 			border-radius: 1rem;
-			box-shadow: var(--box-shadow-1), var(--box-shadow-2);
+			box-shadow: var(--box-shadow-1);
 			background-color: var(--ld-bg-blur);
-			backdrop-filter: blur(0.5rem);
 		}
 
 		&.show {

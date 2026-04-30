@@ -74,10 +74,8 @@ const title = computed(() => props.title || typeMap[props.type].title)
 	}
 
 	&.card {
+		border: 1px solid var(--c-primary-soft);
 		background-color: var(--ld-bg-card);
-		background-image:
-			radial-gradient(circle at 4em -25em, var(--c-primary), transparent 30em),
-			linear-gradient(var(--c-primary) -2000%, transparent);
 	}
 
 	.alert-title {

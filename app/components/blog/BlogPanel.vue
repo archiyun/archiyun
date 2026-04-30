@@ -42,8 +42,7 @@ const { transform } = useAvoidTransform(panelRef, avoidTargets)
 	inset-inline-end: min(1rem, 5%);
 	bottom: min(2rem, 5%);
 	border-radius: 0.5rem;
-	background-color: var(--c-bg-a50);
-	backdrop-filter: blur(0.5rem);
+	background-color: var(--ld-bg-card);
 	font-size: 1.4rem;
 	transform: var(--transform);
 	transition: transform 0.1s;
@@ -54,7 +53,7 @@ const { transform } = useAvoidTransform(panelRef, avoidTargets)
 	}
 
 	&.has-active {
-		box-shadow: var(--box-shadow-1), var(--box-shadow-3);
+		box-shadow: var(--box-shadow-1);
 	}
 }
 

@@ -129,21 +129,27 @@ const { copy, copied } = useCopy(shareText)
 }
 
 .post-title {
-	padding: 0.8em 1rem;
-	font-size: 1.6em;
-	line-height: 1.2;
+	padding: 0.95em 1rem 1.05em;
+	font-family: var(--font-heading);
+	font-size: clamp(2rem, 4.2vw, 3rem);
+	font-weight: 800;
+	letter-spacing: 0;
+	line-height: 1.14;
+	text-wrap: balance;
 	z-index: 1;
 }
 
 .post-nav {
 	padding: 0.8em 1rem;
-	font-size: 0.8em;
+	font-size: 0.9rem;
 
 	.post-info {
 		display: flex;
 		flex-wrap: wrap;
 		gap: 0.5em 1.2em;
 		column-gap: clamp(1em, 3%, 1.5em);
+		line-height: 1.6;
+		color: color-mix(in srgb, currentcolor 82%, transparent);
 	}
 }
 </style>

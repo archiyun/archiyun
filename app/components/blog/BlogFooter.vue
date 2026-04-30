@@ -4,6 +4,9 @@ const appConfig = useAppConfig()
 
 <template>
 <footer class="blog-footer">
+	<div class="footer-stamp text-creative">
+		ARSENOVA.XYZ
+	</div>
 	<nav class="footer-nav">
 		<div v-for="(group, groupIndex) in appConfig.footer.nav" :key="groupIndex">
 			<hgroup class="text-creative" v-text="group.title" />
@@ -23,9 +26,27 @@ const appConfig = useAppConfig()
 
 <style lang="scss" scoped>
 .blog-footer {
+	position: relative;
 	margin: 3rem 1rem;
+	padding-top: 1.25rem;
 	font-size: 0.9em;
 	color: var(--c-text-2);
+
+	&::before {
+		content: "";
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: min(18rem, 42%);
+		border-top: 3px solid var(--c-primary);
+	}
+
+	.footer-stamp {
+		margin: 0.5rem;
+		font-size: clamp(1.6rem, 4vw, 2.25rem);
+		line-height: 0.95;
+		color: color-mix(in srgb, var(--c-text) 84%, var(--c-primary));
+	}
 
 	.footer-nav {
 		display: flex;

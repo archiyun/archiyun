@@ -1,8 +1,6 @@
 import type { Nav, NavItem } from '~/types/nav'
-import { pascalCase } from 'es-toolkit/string'
 import { Temporal } from 'temporal-polyfill'
 import blogConfig from '~~/blog.config'
-import { name, version } from '~~/package.json'
 
 // 图标查询：https://yesicon.app/ph?s=bold
 // 图标插件：https://marketplace.visualstudio.com/items?itemName=antfu.iconify
@@ -54,10 +52,10 @@ export default defineAppConfig({
 	// @keep-sorted
 	footer: {
 		/** 页脚版权信息，支持 <br> 换行等 HTML 标签 */
-		copyright: `© ${Temporal.Now.plainDateISO().year.toString()} ${blogConfig.author.name}`,
+		copyright: `© ${Temporal.Now.plainDateISO().year.toString()} ${blogConfig.author.name} · arsenova.xyz`,
 		/** 侧边栏底部图标导航 */
 		iconNav: [
-			{ icon: 'tabler:home', text: '个人主页', url: blogConfig.author.homepage },
+			{ icon: 'tabler:brand-github', text: 'GitHub', url: 'https://github.com/arsenova' },
 			{ icon: 'tabler:rss', text: 'Atom订阅', url: '/atom.xml' },
 		] satisfies NavItem[],
 		/** 页脚站点地图 */
@@ -65,6 +63,9 @@ export default defineAppConfig({
 			{
 				title: '探索',
 				items: [
+					{ icon: 'tabler:notes', text: 'Notes', url: '/notes' },
+					{ icon: 'tabler:cpu-2', text: 'Tech', url: '/tech' },
+					{ icon: 'tabler:moon-stars', text: 'Life', url: '/life' },
 					{ icon: 'tabler:rss', text: 'Atom订阅', url: '/atom.xml' },
 				],
 			},
@@ -72,12 +73,13 @@ export default defineAppConfig({
 				title: '社交',
 				items: [
 					{ icon: 'tabler:mail', text: blogConfig.author.email, url: `mailto:${blogConfig.author.email}` },
+					{ icon: 'tabler:world', text: 'arsenova.xyz', url: blogConfig.url },
 				],
 			},
 			{
 				title: '信息',
 				items: [
-					{ icon: 'simple-icons:nuxt', text: `主题: ${pascalCase(name)} ${version}`, url: 'https://github.com/L33Z22L11/blog-v3' },
+					{ icon: 'tabler:license', text: blogConfig.copyright.abbr, url: blogConfig.copyright.url },
 				],
 			},
 		] satisfies Nav,
@@ -88,8 +90,8 @@ export default defineAppConfig({
 		logo: blogConfig.author.avatar,
 		/** 展示标题文本，否则展示纯 Logo */
 		showTitle: true,
+		caption: '私人传输',
 		subtitle: blogConfig.subtitle,
-		emojiTail: ['✨', '🌙', '💻', '☕', '🎵'],
 	},
 
 	/** 友链页面 */
@@ -105,9 +107,12 @@ export default defineAppConfig({
 		{
 			title: '',
 			items: [
-				{ icon: 'tabler:files', text: '文章', url: '/' },
-				{ icon: 'tabler:link', text: '友链', url: '/link' },
+				{ icon: 'tabler:home', text: '主页', url: '/' },
+				{ icon: 'tabler:notes', text: '文章', url: '/notes' },
+				{ icon: 'tabler:cpu-2', text: '技术', url: '/tech' },
+				{ icon: 'tabler:moon-stars', text: '生活', url: '/life' },
 				{ icon: 'tabler:archive', text: '归档', url: '/archive' },
+				{ icon: 'tabler:user-circle', text: '关于', url: '/about' },
 			],
 		},
 	] satisfies Nav,

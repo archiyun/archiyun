@@ -18,16 +18,16 @@
 <style lang="scss">
 #blog-root {
 	display: flex;
-	position: relative;
 	justify-content: center;
 	gap: 1rem;
+	position: relative;
 	min-width: 0;
 	padding: 1rem;
 	isolation: isolate;
 
 	&::before,
 	&::after {
-		content: "";
+		content: none;
 		position: fixed;
 		border-radius: 50%;
 		filter: blur(80px);
@@ -41,8 +41,8 @@
 		width: min(34rem, 40vw);
 		height: min(34rem, 40vw);
 		background:
-			radial-gradient(circle at 30% 30%, hsl(24deg 100% 70% / 30%), transparent 58%),
-			radial-gradient(circle at 65% 65%, hsl(190deg 100% 55% / 22%), transparent 62%);
+			radial-gradient(circle at 30% 30%, hsl(356deg 90% 48% / 28%), transparent 58%),
+			radial-gradient(circle at 65% 65%, hsl(39deg 80% 82% / 14%), transparent 62%);
 	}
 
 	&::after {
@@ -50,8 +50,14 @@
 		bottom: -10rem;
 		width: min(28rem, 32vw);
 		height: min(28rem, 32vw);
-		background: radial-gradient(circle, hsl(198deg 100% 52% / 18%), transparent 62%);
+		background: radial-gradient(circle, hsl(356deg 80% 45% / 18%), transparent 62%);
 	}
+}
+
+body {
+	background-color: var(--c-bg-1);
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizelegibility;
 }
 
 #blog-sidebar, #blog-aside {

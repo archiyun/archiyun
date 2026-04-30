@@ -9,24 +9,17 @@ const appConfig = useAppConfig()
 
 <template>
 <UtilLink class="blog-header">
-	<div v-if="appConfig.header.emojiTail" class="emoji-tail">
-		<span
-			v-for="(emoji, emojiIndex) in appConfig.header.emojiTail"
-			:key="emojiIndex"
-			class="split-char"
-			:style="getFixedDelay(emojiIndex * .6 - 3)"
-			v-text="emoji"
-		/>
-	</div>
-
 	<NuxtImg
 		:src="appConfig.header.logo"
 		class="blog-logo round-cobblestone"
-		:class="{ circle: appConfig.header.showTitle }"
 		:alt="appConfig.title"
 	/>
 
 	<div v-if="appConfig.header.showTitle" class="blog-text">
+		<div class="header-caption">
+			{{ appConfig.header.caption }}
+		</div>
+
 		<component :is="tag" class="header-title">
 			<span
 				v-for="(char, charIndex) in appConfig.title"
@@ -49,22 +42,45 @@ const appConfig = useAppConfig()
 	contain: layout;
 	display: flex;
 	align-items: center;
-	gap: 0.5em;
+	gap: 0.8em;
 	position: relative;
 	margin: clamp(1rem, 2rem, 5vh) 1rem min(1rem, 5vh);
+	padding-inline-start: 0.85rem;
 	line-height: 1.4;
 	color: var(--c-text);
 	user-select: none;
+
+	&::before {
+		content: "";
+		position: absolute;
+		top: 0.15rem;
+		bottom: 0.15rem;
+		left: 0;
+		width: 3px;
+		background: linear-gradient(var(--c-primary), transparent 82%);
+	}
 }
 
 .blog-logo {
-	height: 3em;
+	width: 3.25em;
+	height: 3.25em;
+	border: 1px solid var(--c-border);
+	border-radius: 0.65rem;
+	box-shadow: var(--box-shadow-1), var(--box-shadow-3);
+	background: var(--ld-bg-card);
+}
 
-	&.circle {
-		width: 3em;
-		border-radius: 50%;
-		box-shadow: var(--box-shadow-1), var(--box-shadow-3);
-	}
+.blog-text {
+	display: grid;
+	gap: 0.05rem;
+}
+
+.header-caption {
+	font-size: 0.66rem;
+	font-weight: 800;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+	color: var(--c-primary);
 }
 
 .header-title {
@@ -81,8 +97,9 @@ const appConfig = useAppConfig()
 }
 
 .header-subtitle {
-	opacity: 0.5;
-	font-size: 0.8em;
+	opacity: 0.72;
+	max-width: 18rem;
+	font-size: 0.76em;
 }
 
 @keyframes vf-weight {
@@ -96,46 +113,9 @@ const appConfig = useAppConfig()
 	to { font-variation-settings: "BEVL" 1; }
 }
 
-.emoji-tail {
-	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
-	align-content: center;
-	justify-items: center;
-	position: absolute;
-	opacity: 0.2;
-	inset: 0;
-	font-size: 4rem;
-	transition: opacity 1s;
-	filter: blur(2px);
-	pointer-events: none;
-	z-index: -2;
-
-	> .split-char {
-		animation: 5s infinite alternate emoji-floating;
-		animation-delay: var(--delay);
-		animation-play-state: paused;
-	}
-}
-
 .blog-header:hover {
-	.emoji-tail {
-		opacity: 0.5;
-	}
-
 	.split-char {
 		animation-play-state: running;
-	}
-}
-
-@keyframes emoji-floating {
-	50% {
-		transform: translate(-12px, -4px) scale(1.2);
-		filter: blur(4px);
-	}
-
-	100% {
-		transform: translate(-4px, -12px) scale(0.9);
-		filter: blur(1px);
 	}
 }
 </style>

@@ -1,4 +1,4 @@
-# maksim 的博客
+# ARSENOVA 的博客
 
 [![框架](https://img.shields.io/badge/框架-Nuxt-00DC82?logo=Nuxt.js)](https://nuxt.com/)
 [![CMS](https://img.shields.io/badge/CMS-Nuxt%20Content-00DC82?logo=Nuxt.js)](https://content.nuxt.com/)
@@ -14,8 +14,7 @@
 
 - **主题代码**：遵循原项目 [MIT License](LICENSE)，原作者为 [L33Z22L11](https://github.com/L33Z22L11)
 - **原作者文章**：受 [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans) 保护，本仓库已移除全部原作者文章，不做任何转载
-- **本站文章**：由 maksim 原创，保留所有权利
-- **注**: 本人目前忙于找实习， 暂时不为网站部署和弄域名。
+- **本站文章**：由 ARSENOVA 原创，保留所有权利
 
 ## 快速开始
 
@@ -35,6 +34,33 @@ pnpm dev
 
 ```sh
 pnpm new
+```
+
+### 文章封面图约定
+
+正文封面统一放在 `public/images/posts/` 下，并按年份分目录：
+
+```sh
+public/images/posts/
+├── 2026/
+│   ├── high-concurrency-runtime-cover.jpg
+│   └── leetcode-1-100-cover.jpg
+```
+
+建议约定：
+
+- 文件名使用文章 slug + `-cover`，例如 `high-concurrency-runtime-cover.jpg`
+- 目录名使用文章年份，例如 `2026/`
+- 比例优先 `2:1`
+- 封面图里不要再重复写文章标题
+
+在文章 Front Matter 中这样引用：
+
+```md
+---
+title: 高并发调度层设计
+image: /images/posts/2026/high-concurrency-runtime-cover.jpg
+---
 ```
 
 ### 构建生产环境
@@ -65,6 +91,8 @@ pnpm preview
 │   ├── posts            # 正式文章
 │   ├── previews         # 草稿
 │   └── link.md          # 友链页说明
+├── public
+│   └── images/posts     # 文章封面图
 ├── blog.config.ts       # 博客静态公共配置★
 └── nuxt.config.ts       # Nuxt 配置
 ```

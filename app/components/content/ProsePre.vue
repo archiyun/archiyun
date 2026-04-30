@@ -251,15 +251,15 @@ pre {
 
 		display: inline-block;
 		position: relative;
-		box-shadow: 0 0 10rem 4rem var(--c-bg-2);
-		transition: box-shadow 0.2s;
+		background-color: var(--ld-bg-active);
+		transition: background-color 0.2s;
 
 		@supports (color: color-mix(in srgb, transparent, transparent)) {
-			box-shadow: 0 0 0 100vmax color-mix(in srgb, transparent, var(--c-bg-2));
+			background-color: color-mix(in srgb, var(--c-primary) 12%, var(--c-bg-2));
 		}
 
 		pre:hover > & {
-			box-shadow: none;
+			background-color: transparent;
 		}
 	}
 

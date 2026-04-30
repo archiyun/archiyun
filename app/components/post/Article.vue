@@ -10,6 +10,8 @@ const showAllDate = isTimeDiffSignificant(props.date, props.updated)
 const categoryLabel = computed(() => props.categories?.[0])
 const categoryColor = computed(() => appConfig.article.categories[categoryLabel.value!]?.color || 'var(--c-primary)')
 const categoryIcon = computed(() => getCategoryIcon(categoryLabel.value))
+const moodTag = computed(() => props.tags?.[0] || (categoryLabel.value === '生活' ? 'mood' : 'focus'))
+const readMinutes = computed(() => props.readingTime?.minutes ? Math.max(1, Math.ceil(props.readingTime.minutes)) : undefined)
 </script>
 
 <template>
@@ -58,6 +60,16 @@ const categoryIcon = computed(() => getCategoryIcon(categoryLabel.value))
 					<Icon name="tabler:pilcrow" />
 					{{ formatNumber(readingTime?.words) }}字
 				</span>
+
+				<span v-if="readMinutes" class="article-words">
+					<Icon name="tabler:clock" />
+					{{ readMinutes }}分钟
+				</span>
+
+				<span class="article-mood">
+					<Icon name="tabler:sparkles" />
+					{{ moodTag }}
+				</span>
 			</div>
 
 			<div class="article-cta">
@@ -80,10 +92,8 @@ const categoryIcon = computed(() => getCategoryIcon(categoryLabel.value))
 	overflow: hidden;
 	margin: 1em 0;
 	border: 1px solid var(--c-border);
-	border-radius: 1rem;
-	background:
-		linear-gradient(135deg, hsl(24deg 100% 70% / 7%), transparent 38%),
-		linear-gradient(180deg, var(--ld-bg-card), var(--c-bg-a50));
+	border-radius: 0.75rem;
+	background: var(--ld-bg-card);
 	color: var(--c-text);
 	animation: float-in 0.2s var(--delay) backwards;
 
@@ -93,8 +103,8 @@ const categoryIcon = computed(() => getCategoryIcon(categoryLabel.value))
 
 	> article {
 		display: grid;
-		gap: 0.85rem;
 		align-content: start;
+		gap: 0.85rem;
 		padding: 1.15rem;
 	}
 }
@@ -109,7 +119,8 @@ const categoryIcon = computed(() => getCategoryIcon(categoryLabel.value))
 	display: flex;
 	flex-wrap: wrap;
 	gap: 0.5em clamp(1em, 4%, 1.35em);
-	font-size: 0.8em;
+	font-size: 0.84rem;
+	letter-spacing: 0.01em;
 	color: var(--c-text-2);
 
 	&:empty {
@@ -131,18 +142,22 @@ const categoryIcon = computed(() => getCategoryIcon(categoryLabel.value))
 }
 
 .article-title {
-	font-size: clamp(1.25rem, 2.2vw, 1.5rem);
-	line-height: 1.15;
+	font-family: var(--font-heading);
+	font-size: clamp(1.4rem, 2.5vw, 1.75rem);
+	font-weight: 750;
+	letter-spacing: 0;
+	line-height: 1.22;
 	color: var(--c-text);
 }
 
 .article-description {
 	display: -webkit-box;
 	overflow: hidden;
-	font-size: 0.95em;
-	line-height: 1.75;
-	color: var(--c-text-2);
+	font-size: 0.98rem;
+	letter-spacing: 0.015em;
 	-webkit-line-clamp: 2;
+	line-height: 1.82;
+	color: var(--c-text-2);
 	-webkit-box-orient: vertical;
 }
 
@@ -152,9 +167,11 @@ const categoryIcon = computed(() => getCategoryIcon(categoryLabel.value))
 	gap: 0.35rem;
 	width: fit-content;
 	padding: 0.42rem 0.72rem;
-	border-radius: 999px;
-	background-color: color-mix(in srgb, var(--cg-color) 12%, transparent);
-	font-size: 0.82rem;
+	border: 1px solid color-mix(in srgb, var(--cg-color) 42%, transparent);
+	border-radius: 0.35rem;
+	background-color: color-mix(in srgb, var(--cg-color) 8%, var(--ld-bg-card));
+	font-size: 0.8rem;
+	font-weight: 600;
 	color: var(--cg-color);
 }
 
@@ -163,9 +180,18 @@ const categoryIcon = computed(() => getCategoryIcon(categoryLabel.value))
 	align-items: center;
 	gap: 0.35rem;
 	padding: 0.42rem 0.72rem;
-	border-radius: 999px;
-	background-color: var(--c-primary-soft);
-	font-size: 0.82rem;
+	border: 1px solid var(--c-border);
+	border-radius: 0.35rem;
+	background-color: var(--ld-bg-card);
+	font-size: 0.8rem;
+	font-weight: 600;
+	color: var(--c-primary);
+}
+
+.article-mood {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35rem;
 	color: var(--c-primary);
 }
 
@@ -183,9 +209,9 @@ const categoryIcon = computed(() => getCategoryIcon(categoryLabel.value))
 	width: 100%;
 	height: 100%;
 	min-height: 100%;
-	object-fit: cover;
 	transition: transform 0.35s, filter 0.35s;
 	filter: saturate(1.05) contrast(1.02);
+	object-fit: cover;
 
 	.article-card:hover > & {
 		transform: scale(1.03);

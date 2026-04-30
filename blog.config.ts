@@ -1,26 +1,26 @@
 import type { FeedEntry } from './app/types/feed'
 
 const basicConfig = {
-	title: 'maksim',
-	subtitle: '偷偷思考人生',
+	title: 'ARSENOVA',
+	subtitle: '代码、生活、笔记与夜谈',
 	// 长 description 利好于 SEO
-	description: '记录开发、技术、生活与杂谈的个人博客。',
+	description: '记录生活、情绪、音乐、城市和一些没说出口的想法, 还有回忆录。',
 	author: {
-		name: 'maksim',
+		name: 'ARSENOVA',
 		avatar: 'https://github.com/akiba-miku.png',
 		email: 'furina.see.fun@gmail.com',
-		homepage: 'https://github.com/akiba-miku',
+		homepage: 'https://arsenova.xyz',
 	},
 	copyright: {
 		abbr: 'CC BY-NC-SA 4.0',
 		name: '署名-非商业性使用-相同方式共享 4.0 国际',
 		url: 'https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans',
 	},
-	favicon: 'https://github.com/akiba-miku.png',
+	favicon: '/favicon.svg',
 	language: 'zh-CN',
 	timeEstablished: '2026-04-17',
 	timeZone: 'Asia/Shanghai',
-	url: 'https://blog.example.site/',
+	url: 'https://arsenova.xyz/',
 	defaultCategory: '未分类',
 }
 
@@ -94,7 +94,7 @@ export const myFeed: FeedEntry = {
 	avatar: blogConfig.author.avatar,
 	archs: ['Nuxt', 'Vercel'],
 	date: blogConfig.timeEstablished,
-	comment: '这是我自己',
+	comment: '我自己',
 }
 
 export default blogConfig

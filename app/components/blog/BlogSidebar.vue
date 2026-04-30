@@ -44,6 +44,7 @@ const debouncedSelection = refDebounced(text)
 
 	<footer class="sidebar-footer">
 		<BlogThemeToggle />
+		<BlogColorPicker />
 		<ZIconNavList :list="appConfig.footer.iconNav" />
 	</footer>
 </aside>
@@ -65,14 +66,13 @@ const debouncedSelection = refDebounced(text)
 		width: 320px;
 		max-width: 100%;
 		background-color: var(--ld-bg-blur);
-		backdrop-filter: blur(0.5rem);
 		color: currentcolor;
 		transform: var(--transform-start-far);
 		transition: transform 0.2s;
 		z-index: var(--z-index-popover);
 
 		&.show {
-			box-shadow: var(--box-shadow-1), var(--box-shadow-3);
+			box-shadow: var(--box-shadow-1);
 			transform: none;
 		}
 	}
@@ -90,7 +90,7 @@ const debouncedSelection = refDebounced(text)
 	}
 
 	li {
-		margin: 0.5em 0;
+		margin: 0.65em 0;
 	}
 }
 
@@ -102,9 +102,13 @@ const debouncedSelection = refDebounced(text)
 	border-radius: 0.5em;
 	transition: all 0.2s;
 
-	&:hover,
-	&.router-link-active {
+	&:hover {
 		background-color: var(--c-bg-soft);
+		color: var(--c-text);
+	}
+
+	&.router-link-active {
+		background-color: var(--ld-bg-active);
 		color: var(--c-text);
 	}
 
@@ -112,7 +116,7 @@ const debouncedSelection = refDebounced(text)
 		content: "⦁";
 		width: 1em;
 		text-align: center;
-		color: var(--c-text-3);
+		color: var(--c-primary);
 	}
 
 	> .iconify {

@@ -1,17 +1,18 @@
 :root {
-	--font-basic: "InterVariable", /* Android/Linux */ "sans-serif", /* Firefox */ "Noto Sans SC", sans-serif;
+	--font-basic: "HarmonyOS Sans SC", "PingFang SC", "Noto Sans SC", "Inter", system-ui, sans-serif;
+	--font-heading: "HarmonyOS Sans SC", "PingFang SC", "Noto Sans SC", "Inter", sans-serif;
 	--font-serif: /* Windows */ "Noto Serif SC-Local", "Noto Serif SC", serif;
-	--font-creative: "DOUYINSANSBOLD-GB", "InterVariable", sans-serif;
-	--font-stroke-free: "DOUYINSANSBOLD-GB", "Inter", /* macOS */ "Lantinghei SC", /* Windows */ "Microsoft YaHei", sans-serif;
-	--font-monospace: "JetBrains Mono", /* Android/Linux */ "monospace", /* Windows */ "Cascadia Code", /* Windows */ "Consolas", /* Apple */ "Monaco", var(--font-basic), monospace;
+	--font-creative: var(--font-heading);
+	--font-stroke-free: var(--font-heading);
+	--font-monospace: "JetBrains Mono", monospace;
 
 	@media (max-resolution: 1.2dppx) {
-		--font-basic: "InterVariable", system-ui, sans-serif;
+		--font-basic: "HarmonyOS Sans SC", "PingFang SC", "Noto Sans SC", "Inter", system-ui, sans-serif;
 	}
 }
 
 @font-face {
-	font-family: "AlimamaFangYuanTi";
+	font-family: AlimamaFangYuanTi;
 	font-style: normal;
 	font-weight: 400;
 	src: url("../fonts/AlimamaFangYuanTi.woff2") format("woff2");
