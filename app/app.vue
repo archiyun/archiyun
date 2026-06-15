@@ -18,6 +18,7 @@
 <style lang="scss">
 #blog-root {
 	display: flex;
+	align-items: flex-start;
 	justify-content: center;
 	gap: 1rem;
 	position: relative;
@@ -61,7 +62,7 @@ body {
 }
 
 #blog-sidebar, #blog-aside {
-	flex: 0 0 280px; // 防止搜索框 grow
+	flex: 0 0 var(--layout-sidebar-w); // 防止搜索框 grow
 	position: sticky;
 	top: 1rem;
 	height: calc(100vh - 1rem);
@@ -74,13 +75,17 @@ body {
 	}
 }
 
+#blog-aside {
+	flex-basis: var(--layout-aside-w);
+}
+
 #content {
 	display: flex;
 	gap: 1rem;
 
 	// 若设置的是 max-width，则内部 main 宽度为 fit-content，可能无法撑满
 	// 此时即使设置 flex-grow，也会影响 #sidebar 无法正确 shrink
-	width: min(calc(100vw - 2rem), #{$breakpoint-widescreen});
+	width: min(calc(100vw - 2rem), calc(var(--feed-max) + var(--layout-aside-w) + 1rem));
 	min-width: 0; // 解决父级 flexbox 设置 justify-content: center 时溢出左侧消失的问题
 
 	// 此处不建议给内容设置 padding

@@ -152,7 +152,8 @@ function openActiveItem() {
 	max-width: $breakpoint-mobile;
 	margin: auto;
 	border: 1px solid var(--c-primary);
-	border-radius: 1em;
+	border-radius: var(--radius);
+	corner-shape: superellipse(1.2);
 	box-shadow: var(--box-shadow-2), var(--box-shadow-3);
 	outline: 0.2em solid var(--c-primary-soft);
 	background-color: var(--ld-bg-card);
@@ -161,14 +162,32 @@ function openActiveItem() {
 .input {
 	display: flex;
 	align-items: center;
-	gap: 1em;
+	gap: 0.75em;
 	position: relative;
-	padding: 0 1em;
+	margin: 0.85rem;
+	padding: 0 0.9em;
+	border: 1px solid var(--c-border);
+	border-radius: var(--radius);
+	corner-shape: superellipse(1.2);
+	background: var(--c-bg-2);
+	color: var(--c-text-3);
+	transition: border-color 0.2s, box-shadow 0.2s, color 0.2s;
+
+	&:focus-within {
+		border-color: var(--c-primary);
+		box-shadow: 0 0 0 3px var(--c-primary-soft);
+		color: var(--c-primary);
+	}
 
 	> .search-input {
 		width: 100%;
-		padding: 1em 0;
+		padding: 0.85em 0;
 		outline: none;
+		color: var(--c-text);
+
+		&::placeholder {
+			color: var(--c-text-3);
+		}
 	}
 }
 

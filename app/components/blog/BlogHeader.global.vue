@@ -16,10 +16,6 @@ const appConfig = useAppConfig()
 	/>
 
 	<div v-if="appConfig.header.showTitle" class="blog-text">
-		<div class="header-caption">
-			{{ appConfig.header.caption }}
-		</div>
-
 		<component :is="tag" class="header-title">
 			<span
 				v-for="(char, charIndex) in appConfig.title"
@@ -29,6 +25,10 @@ const appConfig = useAppConfig()
 				v-text="char"
 			/>
 		</component>
+
+		<div class="header-caption">
+			{{ appConfig.header.caption }}
+		</div>
 
 		<div class="header-subtitle">
 			{{ appConfig.header.subtitle }}
@@ -42,51 +42,43 @@ const appConfig = useAppConfig()
 	contain: layout;
 	display: flex;
 	align-items: center;
-	gap: 0.8em;
+	gap: 0.7em;
 	position: relative;
-	margin: clamp(1rem, 2rem, 5vh) 1rem min(1rem, 5vh);
-	padding-inline-start: 0.85rem;
-	line-height: 1.4;
+	margin: clamp(1rem, 2rem, 5vh) 1rem 1rem;
+	line-height: 1.2;
 	color: var(--c-text);
 	user-select: none;
-
-	&::before {
-		content: "";
-		position: absolute;
-		top: 0.15rem;
-		bottom: 0.15rem;
-		left: 0;
-		width: 3px;
-		background: linear-gradient(var(--c-primary), transparent 82%);
-	}
 }
 
 .blog-logo {
-	width: 3.25em;
-	height: 3.25em;
+	width: 2.8em;
+	height: 2.8em;
 	border: 1px solid var(--c-border);
-	border-radius: 0.65rem;
-	box-shadow: var(--box-shadow-1), var(--box-shadow-3);
+	border-radius: var(--radius);
+	box-shadow: var(--box-shadow-1);
 	background: var(--ld-bg-card);
 }
 
 .blog-text {
 	display: grid;
-	gap: 0.05rem;
+	gap: 0.08rem;
+	min-width: 0;
 }
 
 .header-caption {
+	font-family: var(--font-heading);
 	font-size: 0.66rem;
-	font-weight: 800;
-	letter-spacing: 0.16em;
+	font-weight: 600;
+	letter-spacing: 0.18em;
 	text-transform: uppercase;
-	color: var(--c-primary);
+	color: var(--c-text-3);
 }
 
 .header-title {
-	font-family: AlimamaFangYuanTi, "Noto Sans SC", sans-serif;
-	font-size: 1.5em;
+	font-family: var(--font-display);
+	font-size: 1.16rem;
 	font-synthesis: none;
+	letter-spacing: 0.06em;
 	font-variation-settings: "wght" 600, "BEVL" 100;
 
 	> .split-char {
@@ -99,7 +91,9 @@ const appConfig = useAppConfig()
 .header-subtitle {
 	opacity: 0.72;
 	max-width: 18rem;
-	font-size: 0.76em;
+	font-size: 0.7rem;
+	line-height: 1.45;
+	color: var(--c-text-3);
 }
 
 @keyframes vf-weight {

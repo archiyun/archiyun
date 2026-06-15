@@ -1,12 +1,12 @@
 import type { FeedEntry } from './app/types/feed'
 
 const basicConfig = {
-	title: 'ARSENOVA',
-	subtitle: '代码、生活、笔记与夜谈',
+	title: 'Arsenova',
+	subtitle: 'MyGo!!!!!',
 	// 长 description 利好于 SEO
-	description: '记录生活、情绪、音乐、城市和一些没说出口的想法, 还有回忆录。',
+	description: '咕咕嘎嘎',
 	author: {
-		name: 'ARSENOVA',
+		name: 'arsenova',
 		avatar: 'https://github.com/akiba-miku.png',
 		email: 'furina.see.fun@gmail.com',
 		homepage: 'https://arsenova.xyz',
@@ -85,7 +85,7 @@ const blogConfig = {
 /** 用于生成 OPML 和友链页面配置 */
 export const myFeed: FeedEntry = {
 	author: blogConfig.author.name,
-	sitenick: '存档处',
+	sitenick: 'arsenova home',
 	title: blogConfig.title,
 	desc: blogConfig.subtitle || blogConfig.description,
 	link: blogConfig.url,
@@ -94,7 +94,7 @@ export const myFeed: FeedEntry = {
 	avatar: blogConfig.author.avatar,
 	archs: ['Nuxt', 'Vercel'],
 	date: blogConfig.timeEstablished,
-	comment: '我自己',
+	comment: 'King !',
 }
 
 export default blogConfig

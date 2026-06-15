@@ -62,5 +62,19 @@ if (import.meta.dev) {
 	&:hover {
 		opacity: 1;
 	}
+
+	:global(.post-header:has(.text-story)) + & {
+		max-width: var(--content-max);
+		margin: 1rem auto;
+		padding: 0 var(--gutter);
+		font-family: var(--font-serif);
+		font-size: 1.05rem;
+		line-height: 1.9;
+		color: var(--c-text-1);
+
+		@media (max-width: $breakpoint-mobile) {
+			padding: 0 1rem;
+		}
+	}
 }
 </style>

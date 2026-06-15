@@ -23,15 +23,18 @@ defineProps<{
 <style lang="scss" scoped>
 menu {
 	display: flex;
-	justify-content: center;
+	gap: 0.35rem;
 
 	a {
-		padding: 0.5em;
-		border-radius: 2em;
-		transition: background-color 0.2s;
+		padding: 0.42em;
+		border-radius: var(--radius);
+		corner-shape: superellipse(1.2);
+		color: var(--c-text-3);
+		transition: background-color 0.2s, color 0.2s;
 
 		&:hover {
 			background-color: var(--c-bg-soft);
+			color: var(--c-primary);
 		}
 
 		.iconify {

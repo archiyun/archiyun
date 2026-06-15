@@ -69,15 +69,34 @@ function toggleDirection() {
 <style lang="scss" scoped>
 .order-toggle {
 	display: flex;
-	gap: 1rem;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.6rem;
+	font-family: var(--font-heading);
+	font-size: var(--text-sm);
 	color: var(--c-text-2);
 
 	:deep(button), :deep(a) {
-		transition: color 0.2s;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.3em;
+		padding: 0.36rem 0.66rem;
+		border: 1px solid var(--c-border);
+		border-radius: 999px;
+		background: var(--ld-bg-card);
+		font-weight: 600;
+		transition: border-color 0.2s, background-color 0.2s, color 0.2s;
 
 		&:hover {
+			border-color: color-mix(in srgb, var(--c-primary) 42%, transparent);
+			background: var(--c-primary-soft);
 			color: var(--c-primary);
 		}
+	}
+
+	> span {
+		display: inline-flex;
+		gap: 0.5rem;
 	}
 
 	.toggle-direction {

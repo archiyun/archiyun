@@ -48,20 +48,23 @@ const tip = computed(() => {
 	align-items: baseline;
 	margin: 0.1em;
 	border: 1px solid var(--c-border);
-	border-radius: 4px;
+	border-radius: var(--radius-pill);
 	box-sizing: content-box;
-	background-color: var(--c-bg-2);
+	background-color: var(--c-primary-soft);
 	font-size: 0.875em;
-	transition: color 0.2s;
+	font-weight: 600;
+	color: var(--c-primary);
+	transition: border-color 0.2s, background-color 0.2s, color 0.2s;
 
 	@supports (color: color-mix(in srgb, transparent, transparent)) {
-		border-color: color-mix(in srgb, currentcolor 10%, transparent);
-		background-color: color-mix(in srgb, currentcolor 5%, transparent);
-		color: color-mix(in srgb, currentcolor 80%, transparent);
+		border-color: color-mix(in srgb, currentcolor 18%, transparent);
+		background-color: color-mix(in srgb, currentcolor 10%, transparent);
 	}
 
 	&[href]:hover {
-		color: var(--c-text);
+		border-color: color-mix(in srgb, var(--c-primary) 42%, transparent);
+		background-color: var(--ld-bg-card);
+		color: var(--c-primary);
 	}
 
 	&.round, &.round > .badge-icon {

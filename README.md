@@ -43,13 +43,13 @@ pnpm new
 ```sh
 public/images/posts/
 ├── 2026/
-│   ├── high-concurrency-runtime-cover.jpg
+│   ├── 1.jpg
 │   └── leetcode-1-100-cover.jpg
 ```
 
 建议约定：
 
-- 文件名使用文章 slug + `-cover`，例如 `high-concurrency-runtime-cover.jpg`
+- 文件名使用文章 slug + `-cover`，例如 `1.jpg`
 - 目录名使用文章年份，例如 `2026/`
 - 比例优先 `2:1`
 - 封面图里不要再重复写文章标题
@@ -58,8 +58,8 @@ public/images/posts/
 
 ```md
 ---
-title: 高并发调度层设计
-image: /images/posts/2026/high-concurrency-runtime-cover.jpg
+title: 1
+image: /images/posts/2026/1.jpg
 ---
 ```
 

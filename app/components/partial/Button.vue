@@ -26,34 +26,51 @@ defineProps<ButtonProps>()
 <style lang="scss" scoped>
 .button {
 	display: inline-block;
-	padding: 0.4em 0.6em;
-	border: 1px solid var(--c-bg-soft);
-	border-radius: 0.5em;
+	padding: 0.56em 0.9em;
+	border: 1px solid var(--c-border);
+	border-radius: var(--radius);
+	corner-shape: superellipse(1.2);
 	box-shadow: var(--box-shadow-1);
 	background-color: var(--ld-bg-card);
+	font-family: var(--font-heading);
+	font-weight: 650;
 	line-height: 1.2;
 	vertical-align: middle;
-	transition: color 0.1s, background-color 0.2s;
+	color: var(--c-text-1);
+	transition: transform 0.12s, border-color 0.2s, box-shadow 0.2s, background-color 0.2s, color 0.2s;
 	cursor: pointer;
 
 	&.primary {
+		border-color: color-mix(in srgb, var(--c-primary) 72%, #000);
+		box-shadow: var(--box-shadow-2), 0 2px 0 color-mix(in srgb, var(--c-primary) 55%, #000);
 		background-color: var(--c-primary);
-		color: var(--c-bg);
+		color: var(--c-bg-1);
 	}
 
 	&:hover {
+		border-color: color-mix(in srgb, var(--c-primary) 38%, var(--c-border));
 		box-shadow: var(--box-shadow-2);
-		background-color: var(--c-bg-2);
-		color: var(--c-text);
+		background-color: var(--c-primary-soft);
+		color: var(--c-primary);
+		transform: translateY(-1px);
+	}
+
+	&.primary:hover {
+		background-color: color-mix(in srgb, var(--c-primary) 92%, var(--c-text));
+		color: var(--c-bg-1);
 	}
 
 	&:active {
-		background-color: var(--ld-shadow);
+		box-shadow: var(--box-shadow-1);
+		transform: translateY(1px);
 	}
 
 	&:disabled {
-		background-color: var(--c-bg-1);
+		opacity: 0.58;
+		box-shadow: none;
+		background-color: var(--c-bg-2);
 		color: var(--c-text-3);
+		transform: none;
 		cursor: not-allowed;
 	}
 

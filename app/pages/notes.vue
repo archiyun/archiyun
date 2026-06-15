@@ -1,5 +1,5 @@
 <script setup lang="ts">
-useSeoMeta({ title: 'Notes' })
+useSeoMeta({ title: '我爱 C++ 和 Linux' })
 
 const layoutStore = useLayoutStore()
 layoutStore.setAside(['blog-stats', 'comm-group'])
@@ -14,9 +14,9 @@ const { listSorted } = useArticleSort(listRaw)
 	<header class="channel-hero">
 		<span>ALL FIELD NOTES</span>
 		<h1 class="text-creative">
-			Notes
+			我爱 C++ 和 Linux
 		</h1>
-		<p>技术、生活、音乐、城市和深夜想法都在这里汇流。</p>
+		<p>也爱命令行里穿过长夜的风，爱那些把世界拆开又重新装好的安静时刻。</p>
 	</header>
 
 	<menu class="channel-list">

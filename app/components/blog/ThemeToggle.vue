@@ -22,18 +22,20 @@ const colorMode = useColorMode()
 .theme-toggle {
 	display: flex;
 	gap: 2px;
-	width: fit-content;
-	margin: 0 auto;
-	padding: 2px;
-	border: 1px solid var(--c-border);
-	border-radius: 1rem;
+	width: 100%;
+	padding: 3px;
+	border-radius: var(--radius);
+	corner-shape: superellipse(1.2);
 	background-color: var(--c-bg-2);
 
 	> button {
-		padding: 4px 0.9rem;
-		border-radius: 1rem;
-		transition: all 0.15s;
+		display: grid;
+		flex: 1;
+		place-items: center;
+		padding: 0.42em 0;
+		border-radius: calc(var(--radius) - 3px);
 		color: var(--c-text-3);
+		transition: color 0.2s, background-color 0.2s, box-shadow 0.2s;
 
 		&:hover {
 			color: var(--c-text-1);

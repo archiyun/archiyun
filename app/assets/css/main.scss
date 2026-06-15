@@ -9,6 +9,29 @@
 	--box-shadow-1: 0 0.1em 0.2em var(--ld-shadow);
 	--box-shadow-2: 0 0.2em 0.5em var(--ld-shadow);
 	--box-shadow-3: 0 0.35em 0.8em var(--ld-shadow);
+	--radius-sm: 0.375rem;
+	--radius: 0.5rem;
+	--radius-pill: 999px;
+	--layout-sidebar-w: 248px;
+	--layout-aside-w: 264px;
+	--content-max: 720px;
+	--feed-max: 920px;
+	--gutter: clamp(1rem, 3vw, 2rem);
+	--text-xs: 0.75rem;
+	--text-sm: 0.8125rem;
+	--text-base: 0.9375rem;
+	--text-md: 1rem;
+	--text-lg: 1.25rem;
+	--text-xl: 1.5rem;
+	--text-2xl: 2rem;
+	--text-3xl: 2.75rem;
+	--fw-creative: 550;
+	--lh-tight: 1.2;
+	--lh-snug: 1.45;
+	--lh-body: 1.78;
+	--tracking-body: 0.012em;
+	--tracking-caps: 0.08em;
+	--ease-to-full: cubic-bezier(0.5, 0, 1, 0.5);
 
 	overflow-wrap: break-word;
 	background-color: var(--c-bg-1);
@@ -89,6 +112,12 @@ button, input, textarea {
 	background: none;
 	font: inherit;
 	color: currentcolor;
+}
+
+:where(button, input, textarea, a):focus-visible {
+	border-color: var(--c-primary);
+	outline: 3px solid var(--c-primary-soft);
+	outline-offset: 2px;
 }
 
 // Iconify 图标复用了此类

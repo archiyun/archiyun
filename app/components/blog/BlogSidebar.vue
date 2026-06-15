@@ -44,8 +44,11 @@ const debouncedSelection = refDebounced(text)
 
 	<footer class="sidebar-footer">
 		<BlogThemeToggle />
-		<BlogColorPicker />
 		<ZIconNavList :list="appConfig.footer.iconNav" />
+		<p class="sidebar-copyright">
+			© 2026 ARSENOVA<br>
+			arsenova.xyz · CC BY-NC-SA
+		</p>
 	</footer>
 </aside>
 </template>
@@ -54,6 +57,10 @@ const debouncedSelection = refDebounced(text)
 #blog-sidebar {
 	display: flex;
 	flex-direction: column;
+	gap: 1.1rem;
+	padding: 1.5rem 1rem;
+	border-right: 1px solid var(--c-border);
+	background: var(--c-bg-1);
 	color: var(--c-text-2);
 
 	&:hover {
@@ -65,7 +72,9 @@ const debouncedSelection = refDebounced(text)
 		inset-inline-start: 0;
 		width: 320px;
 		max-width: 100%;
+		border-right: 1px solid var(--c-border);
 		background-color: var(--ld-bg-blur);
+		backdrop-filter: blur(16px);
 		color: currentcolor;
 		transform: var(--transform-start-far);
 		transition: transform 0.2s;
@@ -80,47 +89,55 @@ const debouncedSelection = refDebounced(text)
 
 .sidebar-nav {
 	flex-grow: 1;
-	padding: 0 5%;
-	font-size: 0.9em;
+	padding: 0;
+	font-family: var(--font-heading);
+	font-size: var(--text-base);
 
 	h3 {
-		margin: 2em 0 1em 1em;
+		margin: 1.6em 0 0.8em 0.7em;
 		font: inherit;
+		font-size: var(--text-xs);
+		font-weight: 700;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
 		color: var(--c-text-2);
 	}
 
 	li {
-		margin: 0.65em 0;
+		margin: 0.2rem 0;
 	}
 }
 
 .sidebar-nav-item {
 	display: flex;
 	align-items: center;
-	gap: 0.5em;
-	padding: 0.5em 1em;
-	border-radius: 0.5em;
-	transition: all 0.2s;
+	gap: 0.75em;
+	min-height: 2.85rem;
+	padding: 0.62em 0.78em;
+	border-radius: var(--radius);
+	corner-shape: superellipse(1.2);
+	font-weight: 650;
+	color: var(--c-text-2);
+	transition: background-color 0.2s, color 0.2s, transform 0.2s;
 
 	&:hover {
-		background-color: var(--c-bg-soft);
-		color: var(--c-text);
+		background-color: var(--c-bg-2);
+		color: var(--c-text-1);
+		transform: translateX(1px);
 	}
 
 	&.router-link-active {
 		background-color: var(--ld-bg-active);
-		color: var(--c-text);
-	}
-
-	&.router-link-active::after {
-		content: "⦁";
-		width: 1em;
-		text-align: center;
 		color: var(--c-primary);
+		transform: none;
+
+		.dark & {
+			background-color: color-mix(in srgb, var(--c-primary) 17%, var(--c-bg-2));
+		}
 	}
 
 	> .iconify {
-		font-size: 1.5em;
+		font-size: 1.28em;
 	}
 
 	> .nav-text {
@@ -137,17 +154,19 @@ const debouncedSelection = refDebounced(text)
 }
 
 .search-btn {
-	opacity: 0.5;
-	margin: 1rem 0;
-	outline: 2px solid var(--c-border);
-	outline-offset: -2px;
+	opacity: 0.88;
+	margin: 0.4rem 0 1rem;
+	border: 1px solid var(--c-border);
+	box-shadow: var(--box-shadow-1);
+	background: var(--ld-bg-card);
+	font-size: var(--text-sm);
 	cursor: text;
 	user-select: none;
 
 	&:hover {
 		opacity: 1;
-		outline-color: transparent;
-		background-color: transparent;
+		border-color: transparent;
+		background-color: var(--ld-bg-card);
 	}
 }
 
@@ -156,9 +175,17 @@ const debouncedSelection = refDebounced(text)
 
 	display: grid;
 	gap: var(--gap);
-	padding: var(--gap);
+	padding: 0;
 	font-size: 0.8em;
-	text-align: center;
+	text-align: start;
 	color: var(--c-text-2);
+}
+
+.sidebar-copyright {
+	padding: 0 0.2rem;
+	font-family: var(--font-monospace);
+	font-size: 0.68rem;
+	line-height: 1.6;
+	color: var(--c-text-3);
 }
 </style>
