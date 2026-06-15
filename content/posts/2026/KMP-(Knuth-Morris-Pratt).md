@@ -6,6 +6,11 @@ updated: 2026-04-29 13:29:48
 image: /images/posts/0003_kmp.png
 categories: [技术]
 tags: [C++, Algorithm]
+series:
+  name: 字符串算法
+  slug: string-algorithms
+  description: 从匹配、前缀函数到自动机，记录字符串问题里的回头路。
+  order: 1
 type: tech
 aside: [toc, meta-aside-foo]
 ---

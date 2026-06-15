@@ -13,6 +13,10 @@ node_modules
 logs
 *.log
 
+# editor
+.vscode
+.zed
+
 # Misc
 .DS_Store
 .fleet
@@ -26,6 +30,10 @@ logs
 # Custom
 .vercel
 content/posts/test.md
+
+# Design source bundle + heavy derived artifact (kept locally as reference only)
+ARSENOVA Blog.html
+docs/design/prototype/index.html
 
 # AI
 .codex

@@ -279,7 +279,7 @@ function applyCategory(item?: string) {
 	width: 100%;
 	height: 100%;
 	transition: transform 0.4s var(--ease-to-full);
-	object-fit: cover;
+	object-fit: contain;
 }
 
 .featured-body {
@@ -356,6 +356,7 @@ function applyCategory(item?: string) {
 
 .proper-height {
 	display: grid;
+	align-content: start;
 	gap: 1rem;
 }
 

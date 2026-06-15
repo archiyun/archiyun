@@ -211,8 +211,10 @@ const readMinutes = computed(() => props.readingTime?.minutes ? Math.max(1, Math
 
 .article-cover {
 	width: 100%;
-	height: 100%;
+	height: auto;
 	min-height: 0;
+	max-height: 11rem;
+	aspect-ratio: 0.86;
 	border-radius: var(--radius-sm);
 	transition: transform 0.35s, filter 0.35s;
 	filter: saturate(1.05) contrast(1.02);
@@ -234,6 +236,8 @@ const readMinutes = computed(() => props.readingTime?.minutes ? Math.max(1, Math
 
 	.article-cover {
 		order: -1;
+		width: 100%;
+		max-height: none;
 		aspect-ratio: 2.2;
 	}
 }

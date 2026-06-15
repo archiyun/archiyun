@@ -110,6 +110,7 @@ export default defineAppConfig({
 			items: [
 				{ icon: 'tabler:home', text: '主页', url: '/' },
 				{ icon: 'tabler:notes', text: '文章', url: '/notes' },
+				{ icon: 'tabler:folders', text: '系列', url: '/series' },
 				{ icon: 'tabler:archive', text: '归档', url: '/archive' },
 				{ icon: 'tabler:link', text: '友链', url: '/link' },
 			],

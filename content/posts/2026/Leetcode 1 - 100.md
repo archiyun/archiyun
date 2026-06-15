@@ -5,6 +5,11 @@ date: 2026-04-22 22:44:05
 updated: 2026-04-30 11:30:00
 categories: [技术]
 tags: [C++, LeetCode, 算法]
+series:
+  name: 算法刷题手账
+  slug: algorithm-notes
+  description: 从题目、模板和直觉里整理出可复用的解题路径。
+  order: 1
 image: /images/posts/0001_leetcode_hot100.png
 type: tech
 aside: [toc, meta-aside-track]

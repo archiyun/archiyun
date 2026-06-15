@@ -17,6 +17,12 @@ export interface ArticleSchema {
 	categories?: string[]
 	tags?: string[]
 	type?: ArticleType
+	series?: {
+		name: string
+		slug?: string
+		description?: string
+		order?: number
+	}
 
 	image?: string
 	recommend?: number
@@ -37,6 +43,12 @@ const articleSchema = z.object({
 	categories: z.array(z.string()).default([blogConfig.defaultCategory]),
 	tags: z.array(z.string()).default([]),
 	type: z.enum(articleTypes).optional().default(articleTypes[0]),
+	series: z.object({
+		name: z.string(),
+		slug: z.string().optional(),
+		description: z.string().optional(),
+		order: z.number().optional(),
+	}).optional(),
 
 	image: z.string().optional(),
 	recommend: z.number().optional(),
