@@ -8,7 +8,7 @@ import { Temporal } from 'temporal-polyfill'
 intro('初始化博客：删除原有文章、配置')
 
 const confirm = await text({
-	message: '此操作会导致所有文章、配置文件丢失！输入“confirm”确认',
+	message: '此操作会导致所有文章、配置文件丢失！输入"confirm"确认',
 })
 
 if (confirm !== 'confirm') {
@@ -38,15 +38,15 @@ fs.writeFileSync(`${PATH_NEW_MD}/example.md`, exampleMdContent)
 const PATH_APP_CONFIG = './app/app.config.ts'
 const appConfigContent = fs.readFileSync(PATH_APP_CONFIG, 'utf8')
 	.replace(/'.*?avatar.com.*?'/, 'blogConfig.author.avatar')
-	.replaceAll('L33Z22L11\'', 'octocat\'')
-	.replace('\'/theme\'', `'https://blog.zhilu.site/theme'`)
-	.replace(/'.?ICP备.*?'/, '\'备案\'')
+	.replaceAll("akiba-miku'", "octocat'")
+	.replace(`'/theme'`, `'https://blog.zhilu.site/theme'`)
+	.replace(/'.?ICP备.*?'/, "'备案'")
 fs.writeFileSync(PATH_APP_CONFIG, appConfigContent)
 
 // 处理 blog.config.ts
 const PATH_BLOG_CONFIG = './blog.config.ts'
 const blogConfigContent = fs.readFileSync(PATH_BLOG_CONFIG, 'utf8')
-	.replace(/'[^']*纸鹿[^']*'/g, '\'博客\'')
+	.replace(/'[^']*纸鹿[^']*'/g, "'博客'")
 	.replace(/'[^']*zhilu[^']*'/g, match => match.replace('zhilu', 'example'))
 fs.writeFileSync(PATH_BLOG_CONFIG, blogConfigContent)
 
