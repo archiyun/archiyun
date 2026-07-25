@@ -11,14 +11,6 @@ const { listSorted } = useArticleSort(listRaw)
 <template>
 <BlogHeader class="mobile-only" to="/" tag="h1" />
 <section class="channel-page">
-	<header class="channel-hero">
-		<span>ALL FIELD NOTES</span>
-		<h1 class="text-creative">
-			我爱 C++ 和 Linux
-		</h1>
-		<p>也爱命令行里穿过长夜的风，爱那些把世界拆开又重新装好的安静时刻。</p>
-	</header>
-
 	<menu class="channel-list">
 		<PostArticle
 			v-for="article, index in listSorted"

@@ -39,14 +39,6 @@ function compareSeriesArticle(a: ArticleProps, b: ArticleProps) {
 <template>
 <BlogHeader class="mobile-only" to="/" tag="h1" />
 <section class="series-page">
-	<header class="channel-hero">
-		<span>PROJECT / SERIES / INDEX</span>
-		<h1 class="text-creative">
-			系列索引
-		</h1>
-		<p>把长期工程和过往整理成合集。</p>
-	</header>
-
 	<div v-if="seriesGroups.length" class="series-grid">
 		<section
 			v-for="group, groupIndex in seriesGroups"
@@ -91,8 +83,6 @@ function compareSeriesArticle(a: ArticleProps, b: ArticleProps) {
 </template>
 
 <style lang="scss" scoped>
-@use "~/assets/css/channel-page";
-
 .series-page {
 	max-width: var(--feed-max);
 	margin: 0 auto;
