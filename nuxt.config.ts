@@ -13,7 +13,7 @@ function pluginPath(path: string) {
 	return pathToFileURL(resolve(`./remark-plugins/${path}.ts`)).href
 }
 
-const defaultOgImage = new URL('/arsenova.png', blogConfig.url).toString()
+const defaultOgImage = 'https://github.com/akiba-miku.png'
 
 // 此处配置无需修改
 export default defineNuxtConfig({
