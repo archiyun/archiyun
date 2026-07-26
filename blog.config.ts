@@ -7,7 +7,7 @@ const basicConfig = {
 	description: '咕咕嘎嘎',
 	author: {
 		name: 'arsenova',
-		avatar: 'https://github.com/akiba-miku.png',
+		avatar: 'https://github.com/archiyun.png',
 		email: 'furina.see.fun@gmail.com',
 		homepage: 'https://arsenova.xyz',
 	},

@@ -79,7 +79,7 @@ export default defineEventHandler(async (event) => {
 		],
 		language: blogConfig.language, // RSS 2.0
 		generator: {
-			$uri: 'https://github.com/akiba-miku/akiba-miku',
+			$uri: 'https://github.com/archiyun/archiyun',
 			$version: packageJson.version,
 			_: pascalCase(packageJson.name),
 		},

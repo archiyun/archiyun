@@ -55,7 +55,7 @@ export default defineAppConfig({
 		copyright: `© ${Temporal.Now.plainDateISO().year.toString()} ${blogConfig.author.name} · arsenova.xyz`,
 		/** 侧边栏底部图标导航 */
 		iconNav: [
-			{ icon: 'tabler:brand-github', text: 'GitHub', url: 'https://github.com/akiba-miku' },
+			{ icon: 'tabler:brand-github', text: 'GitHub', url: 'https://github.com/archiyun' },
 			{ icon: 'tabler:rss', text: 'Atom订阅', url: '/atom.xml' },
 			{ icon: 'tabler:mail', text: blogConfig.author.email, url: `mailto:${blogConfig.author.email}` },
 		] satisfies NavItem[],

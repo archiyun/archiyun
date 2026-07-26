@@ -3,7 +3,7 @@
   "type": "module",
   "version": "3.7.0-alpha.3",
   "packageManager": "pnpm@10.33.0",
-  "homepage": "https://github.com/akiba-miku/akiba-miku",
+  "homepage": "https://github.com/archiyun/archiyun",
   "engines": {
     "node": ">=22.18 <23 || >=23.6 <24 || >=24",
     "pnpm": ">=10"
