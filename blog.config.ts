@@ -4,7 +4,7 @@ const basicConfig = {
 	title: 'Arsenova',
 	subtitle: 'MyGo!!!!!',
 	// 长 description 利好于 SEO
-	description: '咕咕嘎嘎',
+	description: '',
 	author: {
 		name: 'arsenova',
 		avatar: 'https://github.com/archiyun.png',

@@ -39,13 +39,6 @@ function applyCategory(item?: string) {
 <UtilHydrateSafe>
 	<div class="post-list" :class="{ 'is-home': homeMode }">
 		<section v-if="homeMode" class="home-hero">
-			<h1 class="home-title">
-				愿你穿过长夜万里，<span>归来仍有风声与星河。</span>
-			</h1>
-			<p class="home-description">
-				{{ appConfig.description }}
-				<em>—— 私人传输 _</em>
-			</p>
 
 			<div class="home-tools">
 				<button class="home-search" type="button" @click="layoutStore.toggle('search')">
