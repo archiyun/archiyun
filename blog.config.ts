@@ -73,12 +73,14 @@ const blogConfig = {
 	},
 
 	/** 向 <head> 中添加脚本 */
-	scripts: [],
+	scripts: [
+		{ src: 'https://lib.baomitu.com/twikoo/1.7.15/twikoo.all.min.js', defer: true },
+	],
 
 	/** 自己部署的 Twikoo 服务 */
 	twikoo: {
-		envId: '',
-		preload: '',
+		envId: 'https://comment.arsenova.xyz',
+		preload: 'https://lib.baomitu.com',
 	},
 }
 
