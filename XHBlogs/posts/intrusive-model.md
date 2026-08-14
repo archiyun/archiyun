@@ -3,6 +3,7 @@ title: "侵入式结构（Intrusive Model）"
 date: "2026-07-25 00:00:00"
 description: "快速了解侵入式容器模型：与标准容器的区别、所有权与生命周期、Hook 与 Tag 机制、成员归属规则，以及项目 ds 模块中的实际使用。"
 tags: ["C++", "侵入式容器", "Intrusive", "数据结构", "开发"]
+cover: "/images/posts/intrusive-model.png"
 ---
 
 - 侵入式容器不保存独立包装节点，hook 嵌入用户对象

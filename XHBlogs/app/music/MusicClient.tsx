@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Play, Pause, SkipBack, SkipForward, Repeat, Shuffle, RefreshCcw, ListMusic, Mic2, Disc3, Volume2, VolumeX, Search, X, MessageSquare } from 'lucide-react';
+import { Play, Pause, SkipBack, SkipForward, Shuffle, Disc3, Volume2, VolumeX, Search, X, MessageSquare } from 'lucide-react';
 import Navbar from '../../components/Navbar';
 import PageTransition from '../../components/PageTransition';
 import { useMusic } from '../../components/MusicProvider';
@@ -13,7 +13,7 @@ export default function MusicClient() {
     playlist, currentSong, isPlaying, progress, currentTime, duration, currentLyric,
     isLoading, togglePlay, nextSong, prevSong, handleSeek,
     playSong, selectSong,
-    playMode, togglePlayMode,
+    isShuffle, toggleShuffle,
     volume, setVolume, isMuted, toggleMute
   } = useMusic();
 
@@ -92,15 +92,6 @@ export default function MusicClient() {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const getPlayModeIcon = () => {
-    switch (playMode) {
-      case 'loop': return <Repeat size={18} className="text-slate-500 hover:text-indigo-500 md:w-5 md:h-5" />;
-      case 'single': return <RefreshCcw size={18} className="text-indigo-500 md:w-5 md:h-5" />;
-      case 'random': return <Shuffle size={18} className="text-slate-500 hover:text-indigo-500 md:w-5 md:h-5" />;
-      default: return <Repeat size={18} className="text-slate-500 md:w-5 md:h-5" />;
-    }
-  };
-
   const handlePlaySong = (index: number) => {
     if (typeof playSong === 'function') playSong(index);
     else if (typeof selectSong === 'function') selectSong(index);
@@ -173,7 +164,13 @@ export default function MusicClient() {
                   <div className="flex justify-between text-[10px] md:text-xs font-bold text-slate-500 dark:text-slate-400 tabular-nums"><span>{formatTime(currentTime)}</span><span>{formatTime(duration)}</span></div>
                 </div>
                 <div className="w-full flex items-center justify-between px-1 md:px-2 lg:px-4">
-                  <button onClick={togglePlayMode} className="p-2 transition-transform hover:scale-110">{getPlayModeIcon()}</button>
+                  <button
+                    onClick={toggleShuffle}
+                    title={isShuffle ? '关闭随机播放' : '开启随机播放'}
+                    className={`p-2 rounded-full transition-all hover:scale-110 ${isShuffle ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/30' : 'text-slate-500 hover:text-indigo-500'}`}
+                  >
+                    <Shuffle size={18} className="md:w-5 md:h-5" />
+                  </button>
                   <div className="flex items-center gap-3 md:gap-4 lg:gap-6">
                     <button onClick={prevSong} className="p-2 text-slate-700 dark:text-slate-300 hover:text-indigo-500 transition-transform hover:scale-110"><SkipBack size={24} className="md:w-7 md:h-7" fill="currentColor" /></button>
                     <button onClick={togglePlay} className="w-14 h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 flex items-center justify-center bg-indigo-500 text-white rounded-full hover:scale-105 shadow-xl shadow-indigo-500/40">

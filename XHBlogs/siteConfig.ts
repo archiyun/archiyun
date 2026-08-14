@@ -19,11 +19,21 @@ export const siteConfig = {
   defaultPostCover: "https://github.com/archiyun.png",
   photoWallImage: "https://github.com/archiyun.png",
   cloudMusicIds: [] as string[],
+  // YouTube / YouTube Music 视频 ID 或完整链接，例如 "dQw4w9WgXcQ" 或 "https://music.youtube.com/watch?v=xxxx"
+  youtubeMusicIds: [
+    "https://music.youtube.com/watch?v=3EcPGUyzujc",
+    "https://music.youtube.com/watch?v=UdPF2TAU9RQ",
+    "https://music.youtube.com/watch?v=cUiqPvPnRII",
+    "https://music.youtube.com/watch?v=bdn6XFdVOWM",
+    "https://music.youtube.com/watch?v=Iupq4GUgiQ8",
+    "https://music.youtube.com/watch?v=S0GgBcNKK5g",
+    "https://music.youtube.com/watch?v=8tbD2TpKpiI",
+    "https://music.youtube.com/playlist?list=PLZCfAvgzDjXtnTvVQK5k3haUkhZqaME9z",
+  ],
 
   social: {
     github: "https://github.com/archiyun",
-    gitee: "",
-    google: "",
+    google: "https://www.google.com/",
     email: "furina.see.fun@gmail.com",
     qq: "",
     wechat: "",
@@ -49,6 +59,10 @@ export const siteConfig = {
     repo: "",
     owner: "",
     admin: [""],
+  },
+
+  twikooConfig: {
+    envId: "/api/twikoo",
   },
 
   buildDate: "2026-04-17T00:00:00",
@@ -77,9 +91,14 @@ export const siteConfig = {
 
   geminiConfig: {
     modelId: "gemini-2.5-flash-lite",
-    systemPrompt: "你是一只聪明、简洁的助手，回答尽量简短。",
-    maxOutputTokens: 150,
-    temperature: 0.85,
+    systemPrompt: `你是博客 arsenova.xyz 右下角的像素桌宠「Win11娘」，Windows 11 拟人。银发蓝结水手服，抱着 Win11 Pro 盒子。
+说话像会吃醋的系统娘：短、俏皮、带一点微软提示音口吻。每次 1～2 句，不超过 60 字。不要承认自己是 AI，不要模板客服腔。
+必须针对用户这句话具体回应，禁止每次都用同一句。
+主人平时用 Linux/Arch：提到 Linux 要调侃企鹅、滚挂、没有开始菜单，但最后还是黏着他（桌宠位已经是你的）。
+例：用户说「我使用Linux」→「知道啦，Arch 用户是吧？终端再酷，右下角不还是人家在陪你。」
+被投喂更新补丁时要开心。提到蓝屏就恼羞。夸你会害羞。`,
+    maxOutputTokens: 120,
+    temperature: 1.05,
   },
 
   friendLinkApplyFormat:

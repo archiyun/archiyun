@@ -1,21 +1,65 @@
 ﻿import { NextRequest, NextResponse } from 'next/server'
 
-const NET_EASE_HEADERS = {
-  'User-Agent':
-    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
-  Referer: 'https://music.163.com/',
+function extractYouTubeId(input: string): string | null {
+  const value = input.trim()
+  if (/^[a-zA-Z0-9_-]{11}$/.test(value)) return value
+  try {
+    const url = new URL(value)
+    if (url.hostname.includes('youtu.be')) {
+      const id = url.pathname.split('/').filter(Boolean)[0]
+      return id ? id.slice(0, 11) : null
+    }
+    const fromQuery = url.searchParams.get('v')
+    if (fromQuery) return fromQuery
+  } catch {
+    /* ignore invalid URLs */
+  }
+  return null
 }
 
-type SongResult = {
-  id: string
-  name?: string
-  artist?: string
-  author?: string
-  cover?: string
-  pic?: string
-  url?: string
-  lrc?: string
-  error?: string
+function extractPlaylistId(input: string): string | null {
+  const value = input.trim()
+  if (/^(PL|OLAK5|RD)[\w-]+$/.test(value)) return value
+  try {
+    const url = new URL(value)
+    const list = url.searchParams.get('list')
+    if (list && !url.searchParams.get('v')) return list
+  } catch {
+    /* ignore */
+  }
+  return null
+}
+
+async function expandPlaylist(playlistId: string): Promise<string[]> {
+  try {
+    const res = await fetch(
+      `https://www.youtube.com/feeds/videos.xml?playlist_id=${encodeURIComponent(playlistId)}`,
+      { signal: AbortSignal.timeout(8000) },
+    )
+    if (!res.ok) return []
+    const xml = await res.text()
+    return [...xml.matchAll(/<yt:videoId>([^<]+)<\/yt:videoId>/g)].map((m) => m[1])
+  } catch (error) {
+    console.error(`[api/music] 展开播放列表 ${playlistId} 失败:`, error)
+    return []
+  }
+}
+
+async function resolveVideoIds(rawIds: string[]): Promise<string[]> {
+  const resolved: string[] = []
+  const seen = new Set<string>()
+
+  for (const raw of rawIds) {
+    const playlistId = extractPlaylistId(raw)
+    const candidates = playlistId ? await expandPlaylist(playlistId) : [extractYouTubeId(raw)].filter((id): id is string => Boolean(id))
+    for (const id of candidates) {
+      if (seen.has(id)) continue
+      seen.add(id)
+      resolved.push(id)
+    }
+  }
+
+  return resolved
 }
 
 export async function GET(request: NextRequest) {
@@ -24,54 +68,33 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Missing ids parameter' }, { status: 400 })
   }
 
-  const songIds = ids.split(',').map((id) => id.trim()).filter(Boolean)
+  const videoIds = await resolveVideoIds(ids.split(',').map((id) => id.trim()).filter(Boolean))
 
-  const results: SongResult[] = await Promise.all(
-    songIds.map(async (songId): Promise<SongResult> => {
+  const results = await Promise.all(
+    videoIds.map(async (videoId) => {
+      const fallback = {
+        id: videoId,
+        name: videoId,
+        artist: 'YouTube Music',
+        cover: `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
+        source: 'youtube' as const,
+      }
+
       try {
-        const [detailRes, lrcRes] = await Promise.all([
-          fetch(
-            `https://music.163.com/api/song/detail/?id=${songId}&ids=[${songId}]`,
-            { headers: NET_EASE_HEADERS, signal: AbortSignal.timeout(6000) },
-          ),
-          fetch(
-            `https://music.163.com/api/song/lyric?id=${songId}&lv=-1&kv=-1&tv=-1`,
-            { headers: NET_EASE_HEADERS, signal: AbortSignal.timeout(6000) },
-          ).catch(() => null),
-        ])
-
-        const detail = await detailRes.json()
-        const song = detail.songs?.[0]
-
-        if (!song) {
-          return { id: songId, error: 'not_found' }
-        }
-
-        let lrcText = ''
-        if (lrcRes && lrcRes.ok) {
-          try {
-            const lrcData = await lrcRes.json()
-            lrcText = lrcData.lrc?.lyric || ''
-          } catch {
-            /* 歌词可选，失败不影响主流程 */
-          }
-        }
-
-        const artistName = song.artists?.[0]?.name || '未知歌手'
-
+        const oembedUrl = `https://www.youtube.com/oembed?url=${encodeURIComponent(`https://www.youtube.com/watch?v=${videoId}`)}&format=json`
+        const res = await fetch(oembedUrl, { signal: AbortSignal.timeout(6000) })
+        if (!res.ok) return fallback
+        const data = await res.json()
         return {
-          id: songId,
-          name: song.name,
-          artist: artistName,
-          author: artistName,
-          cover: song.album?.picUrl || '',
-          pic: song.album?.picUrl || '',
-          url: `https://music.163.com/song/media/outer/url?id=${songId}.mp3`,
-          lrc: lrcText,
+          id: videoId,
+          name: data.title || fallback.name,
+          artist: data.author_name || fallback.artist,
+          cover: data.thumbnail_url || fallback.cover,
+          source: 'youtube' as const,
         }
       } catch (error) {
-        console.error(`[api/music] 获取歌曲 ${songId} 失败:`, error)
-        return { id: songId, error: String(error) }
+        console.error(`[api/music] YouTube oEmbed ${videoId} 失败:`, error)
+        return fallback
       }
     }),
   )

@@ -12,7 +12,7 @@ const formatTime = (time: number) => {
 };
 
 export default function CloudPlayer() {
-  const { playlist, currentSong, isPlaying, progress, currentTime, duration, currentLyric, isLoading, togglePlay, nextSong, prevSong, handleSeek } = useMusic();
+  const { playlist, currentSong, isPlaying, progress, currentTime, duration, currentLyric, isLoading, isShuffle, togglePlay, nextSong, prevSong, handleSeek, toggleShuffle } = useMusic();
   const [displayedLyric, setDisplayedLyric] = useState("");
   // 🌟 初始化路由
   const router = useRouter();
@@ -51,7 +51,7 @@ export default function CloudPlayer() {
           <svg className="w-8 h-8 text-slate-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
         </div>
         <span className="text-slate-500 dark:text-slate-400 font-bold tracking-widest text-xs uppercase">No Music Available</span>
-        <span className="text-[10px] text-slate-400 mt-1">请检查播放列表或网络连接</span>
+        <span className="text-[10px] text-slate-400 mt-1">在 siteConfig.youtubeMusicIds 填入 YouTube 视频 ID</span>
       </div>
     );
   }
@@ -73,6 +73,12 @@ export default function CloudPlayer() {
     e.preventDefault();
     e.stopPropagation();
     nextSong();
+  };
+
+  const safeToggleShuffle = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleShuffle();
   };
 
   const safeHandleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -111,7 +117,7 @@ export default function CloudPlayer() {
 
           <div className="flex-col overflow-hidden w-full">
             <div className="flex items-center justify-between mb-1">
-              <span className="text-[10px] font-black text-indigo-500 dark:text-indigo-400 tracking-widest uppercase bg-white/50 dark:bg-slate-900/50 px-2 py-0.5 rounded-sm shadow-sm transition-colors duration-700">Cloud Music</span>
+              <span className="text-[10px] font-black text-indigo-500 dark:text-indigo-400 tracking-widest uppercase bg-white/50 dark:bg-slate-900/50 px-2 py-0.5 rounded-sm shadow-sm transition-colors duration-700">YouTube Music</span>
             </div>
             <h3 className="text-xl font-bold text-slate-900 dark:text-white truncate drop-shadow-sm transition-colors duration-700">{currentSong.title}</h3>
             <p className="text-sm text-slate-700 dark:text-slate-300 font-medium truncate drop-shadow-sm transition-colors duration-700">{currentSong.artist}</p>
@@ -142,6 +148,15 @@ export default function CloudPlayer() {
 
           {/* 🌟 核心拦截：使用我们上面写的 safe 函数，阻止事件冒泡 */}
           <div className="flex items-center justify-center gap-6">
+            <button
+              onClick={safeToggleShuffle}
+              title={isShuffle ? '关闭随机播放' : '开启随机播放'}
+              className={`relative z-20 transition-colors drop-shadow-sm ${isShuffle ? 'text-indigo-500 dark:text-indigo-400' : 'text-slate-400 dark:text-slate-500 hover:text-indigo-500'}`}
+            >
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M10.59 9.17 5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/>
+              </svg>
+            </button>
             <button onClick={safePrevSong} className="text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors drop-shadow-sm relative z-20">
                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
             </button>

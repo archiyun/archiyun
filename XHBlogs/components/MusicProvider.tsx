@@ -3,43 +3,12 @@
 import { createContext, useContext, useState, useRef, useEffect, ReactNode } from 'react';
 import { siteConfig } from '../siteConfig';
 
-// 【增强版 LRC 歌词解析】
-function parseLrc(lrcText: string) {
-  if (!lrcText || lrcText.length > 30000) return [];
-
-  const lines = lrcText.split(/\r?\n/);
-  const result = [];
-
-  for (let line of lines) {
-    const matches = [...line.matchAll(/\[(\d{2,}):(\d{2})(?:\.(\d{2,3}))?\]/g)];
-    if (matches.length > 0) {
-      let text = line.replace(/\[\d{2,}:\d{2}(?:\.\d{2,3})?\]/g, '').trim();
-
-      // 剔除控制字符
-      const cleanText = text.replace(/[\u0000-\u001F\u007F-\u009F\u200B-\u200D\uFEFF]/g, "");
-
-      if (cleanText) {
-        for (const match of matches) {
-          const min = parseInt(match[1]);
-          const sec = parseInt(match[2]);
-          const ms = match[3] ? parseInt(match[3]) : 0;
-          const divisor = match[3] && match[3].length === 3 ? 1000 : 100;
-          const time = min * 60 + sec + ms / divisor;
-          result.push({ time, text: cleanText });
-        }
-      }
-    }
-  }
-  return result.sort((a, b) => a.time - b.time);
-}
-
-// 🌟 1. 扩充 Context 类型，加入 MusicPage 需要的所有属性
 type PlayMode = 'loop' | 'single' | 'random';
 
 interface MusicContextType {
   playlist: any[];
   currentIndex: number;
-  currentSong: any; // 扩展了 lyrics 属性
+  currentSong: any;
   isPlaying: boolean;
   progress: number;
   currentTime: number;
@@ -49,6 +18,7 @@ interface MusicContextType {
   volume: number;
   isMuted: boolean;
   playMode: PlayMode;
+  isShuffle: boolean;
 
   togglePlay: () => void;
   nextSong: () => void;
@@ -58,9 +28,36 @@ interface MusicContextType {
   setVolume: (value: number) => void;
   toggleMute: () => void;
   togglePlayMode: () => void;
+  toggleShuffle: () => void;
 }
 
 const MusicContext = createContext<MusicContextType | null>(null);
+
+function getConfiguredIds(): string[] {
+  const youtubeIds = (siteConfig as { youtubeMusicIds?: string[] }).youtubeMusicIds || [];
+  if (youtubeIds.length > 0) return youtubeIds;
+  return siteConfig.cloudMusicIds || [];
+}
+
+function loadYouTubeAPI(): Promise<void> {
+  if (typeof window === 'undefined') return Promise.resolve();
+  const win = window as any;
+  if (win.YT?.Player) return Promise.resolve();
+  return new Promise((resolve) => {
+    const existing = document.querySelector('script[src="https://www.youtube.com/iframe_api"]');
+    const prev = win.onYouTubeIframeAPIReady;
+    win.onYouTubeIframeAPIReady = () => {
+      if (typeof prev === 'function') prev();
+      resolve();
+    };
+    if (!existing) {
+      const tag = document.createElement('script');
+      tag.src = 'https://www.youtube.com/iframe_api';
+      document.head.appendChild(tag);
+    }
+    if (win.YT?.Player) resolve();
+  });
+}
 
 export function MusicProvider({ children }: { children: ReactNode }) {
   const [playlist, setPlaylist] = useState<any[]>([]);
@@ -69,158 +66,251 @@ export function MusicProvider({ children }: { children: ReactNode }) {
   const [progress, setProgress] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [lyrics, setLyrics] = useState<{ time: number; text: string }[]>([]);
-  const [currentLyric, setCurrentLyric] = useState("正在连接高可用神经云端...");
+  const [currentLyric, setCurrentLyric] = useState("正在连接 YouTube Music...");
   const [isLoading, setIsLoading] = useState(true);
-
-  // 🌟 2. 新增音量和播放模式状态
   const [volume, setVolumeState] = useState(1);
   const [isMuted, setIsMuted] = useState(false);
-  const [playMode, setPlayMode] = useState<PlayMode>('loop');
+  const [playMode, setPlayMode] = useState<PlayMode>(() => {
+    if (typeof window === 'undefined') return 'loop';
+    try {
+      return localStorage.getItem('music-shuffle') === '1' ? 'random' : 'loop';
+    } catch {
+      return 'loop';
+    }
+  });
 
-  const audioRef = useRef<HTMLAudioElement>(null);
+  useEffect(() => {
+    try {
+      localStorage.setItem('music-shuffle', playMode === 'random' ? '1' : '0');
+    } catch { /* ignore */ }
+  }, [playMode]);
+
+  const playerRef = useRef<any>(null);
+  const playerReadyRef = useRef(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isPlayingRef = useRef(false);
+  const playModeRef = useRef<PlayMode>('loop');
+  const playlistLengthRef = useRef(0);
+  const volumeRef = useRef(1);
+  const isMutedRef = useRef(false);
+
+  isPlayingRef.current = isPlaying;
+  playModeRef.current = playMode;
+  playlistLengthRef.current = playlist.length;
+  volumeRef.current = volume;
+  isMutedRef.current = isMuted;
 
   useEffect(() => {
     let isMounted = true;
+    const ids = getConfiguredIds();
+
     const fetchMusicData = async () => {
       try {
-        const res = await fetch(`/api/music?ids=${siteConfig.cloudMusicIds.join(',')}`);
+        const res = await fetch(`/api/music?ids=${ids.map(encodeURIComponent).join(',')}`);
         const rawResults = await res.json();
-
-        const mergedPlaylist = rawResults
-          .filter((song: any) => song && song.url && !song.error)
+        const mergedPlaylist = (Array.isArray(rawResults) ? rawResults : [])
+          .filter((song: any) => song && song.id && !song.error)
           .map((song: any) => ({
-            id: song.id || Math.random().toString(),
+            id: song.id,
             title: song.name || '未知歌曲',
-            artist: song.artist || song.author || '未知歌手',
-            cover: song.cover || song.pic || 'https://github.com/archiyun.png',
-            src: song.url,
-            lrcUrl: null,
-            lyrics: song.lrc ? parseLrc(song.lrc) : []
+            artist: song.artist || song.author || 'YouTube Music',
+            cover: song.cover || `https://i.ytimg.com/vi/${song.id}/hqdefault.jpg`,
+            lyrics: [],
           }));
 
         if (isMounted) {
-          if (mergedPlaylist.length > 0) setPlaylist(mergedPlaylist);
-          else setCurrentLyric("云端链路受阻");
+          if (mergedPlaylist.length > 0) {
+            setPlaylist(mergedPlaylist);
+            setCurrentLyric('YouTube Music');
+          } else {
+            setCurrentLyric('歌单为空或无法解析');
+          }
           setIsLoading(false);
         }
-      } catch (error) {
-        if (isMounted) { setCurrentLyric("网络初始化失败"); setIsLoading(false); }
+      } catch {
+        if (isMounted) {
+          setCurrentLyric('网络初始化失败');
+          setIsLoading(false);
+        }
       }
     };
 
-    if (siteConfig.cloudMusicIds?.length > 0) fetchMusicData();
+    if (ids.length > 0) fetchMusicData();
     else setIsLoading(false);
 
     return () => { isMounted = false; };
   }, []);
 
   useEffect(() => {
-    if (playlist.length === 0) return;
-    let isMounted = true;
-    const currentSong = playlist[currentIndex];
-    setLyrics([]);
-    setCurrentLyric("♪ 正在缓冲 ♪");
-    if (currentSong.lyrics && currentSong.lyrics.length > 0) {
-      if (isMounted) {
-        setLyrics(currentSong.lyrics);
-        setCurrentLyric(currentSong.lyrics[0]?.text || "\u266a \u7eaf\u4eab\u97f3\u4e50 \u266a");
-      }
-    } else if (currentSong.lrcUrl) {
-      fetch(currentSong.lrcUrl)
-        .then(res => res.text())
-        .then(text => {
-          if (isMounted) {
-             const parsed = parseLrc(text);
-             setLyrics(parsed);
-             setPlaylist(prev => {
-                const newPlaylist = [...prev];
-                newPlaylist[currentIndex].lyrics = parsed;
-                return newPlaylist;
-             });
-          }
-        })
-        .catch(() => { if (isMounted) setCurrentLyric("\u266a \u7eaf\u4eab\u97f3\u4e50 \u266a"); });
-    }
+    if (playlist.length === 0 || !containerRef.current) return;
+    let destroyed = false;
 
-    if (isPlaying && audioRef.current) {
-      const playPromise = audioRef.current.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(() => setIsPlaying(false));
-      }
-    }
-    return () => { isMounted = false; };
-  }, [currentIndex, playlist.length]); // 移除 playlist 依赖防止无限循环，只依赖长度
+    const initPlayer = async () => {
+      await loadYouTubeAPI();
+      if (destroyed || playerRef.current) return;
 
-  // 🌟 4. 同步音量到 audio 元素
+      const win = window as any;
+      playerRef.current = new win.YT.Player(containerRef.current, {
+        height: '180',
+        width: '320',
+        videoId: playlist[currentIndex]?.id,
+        host: 'https://www.youtube.com',
+        playerVars: {
+          autoplay: 0,
+          controls: 0,
+          disablekb: 1,
+          fs: 0,
+          modestbranding: 1,
+          rel: 0,
+          playsinline: 1,
+          origin: window.location.origin,
+        },
+        events: {
+          onReady: (event: any) => {
+            playerReadyRef.current = true;
+            event.target.setVolume(isMutedRef.current ? 0 : volumeRef.current * 100);
+            if (isPlayingRef.current) event.target.playVideo();
+          },
+          onStateChange: (event: any) => {
+            const state = event.data;
+            if (state === win.YT.PlayerState.PLAYING) setIsPlaying(true);
+            if (state === win.YT.PlayerState.PAUSED) setIsPlaying(false);
+            if (state === win.YT.PlayerState.ENDED) {
+              if (playModeRef.current === 'single') {
+                event.target.seekTo(0, true);
+                event.target.playVideo();
+              } else {
+                setIsPlaying(true);
+                if (playModeRef.current === 'random') {
+                  const len = playlistLengthRef.current;
+                  if (len <= 1) {
+                    event.target.seekTo(0, true);
+                    event.target.playVideo();
+                  } else {
+                    setCurrentIndex((prev) => {
+                      let next = Math.floor(Math.random() * len);
+                      if (next === prev) next = (next + 1) % len;
+                      return next;
+                    });
+                  }
+                } else {
+                  setCurrentIndex((prev) => (prev + 1) % playlistLengthRef.current);
+                }
+              }
+            }
+          },
+        },
+      });
+    };
+
+    initPlayer();
+
+    return () => {
+      destroyed = true;
+    };
+  }, [playlist.length]);
+
   useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.volume = isMuted ? 0 : volume;
+    const player = playerRef.current;
+    if (!playerReadyRef.current || !player?.loadVideoById) return;
+    const videoId = playlist[currentIndex]?.id;
+    if (!videoId) return;
+    player.loadVideoById(videoId);
+    if (isPlayingRef.current) {
+      player.playVideo();
+    }
+    setCurrentLyric('YouTube Music');
+    setProgress(0);
+    setCurrentTime(0);
+  }, [currentIndex]);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const player = playerRef.current;
+      if (!playerReadyRef.current || !player?.getCurrentTime) return;
+      const time = player.getCurrentTime() || 0;
+      const dur = player.getDuration() || 0;
+      setCurrentTime(time);
+      setDuration(dur);
+      setProgress(dur ? (time / dur) * 100 : 0);
+    }, 250);
+    return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    const player = playerRef.current;
+    if (!playerReadyRef.current || !player?.setVolume) return;
+    if (isMuted) player.mute();
+    else {
+      player.unMute();
+      player.setVolume(volume * 100);
     }
   }, [volume, isMuted]);
 
   const togglePlay = () => {
-    if (audioRef.current) {
-      if (isPlaying) audioRef.current.pause();
-      else audioRef.current.play().catch(() => setIsPlaying(false));
-      setIsPlaying(!isPlaying);
-    }
+    const player = playerRef.current;
+    if (!playerReadyRef.current || !player) return;
+    if (isPlaying) player.pauseVideo();
+    else player.playVideo();
   };
 
-  // 🌟 5. 重写 nextSong，加入对随机模式的处理
+  const wrapIndex = (from: number, delta: number) => {
+    const len = playlist.length;
+    return (from + delta + len) % len;
+  };
+
   const nextSong = () => {
+    if (playlist.length === 0) return;
     if (playMode === 'random') {
-      setCurrentIndex(Math.floor(Math.random() * playlist.length));
-    } else {
-      setCurrentIndex((prev) => (prev + 1) % playlist.length);
+      if (playlist.length === 1) {
+        setCurrentIndex(0);
+        return;
+      }
+      let next = Math.floor(Math.random() * playlist.length);
+      if (next === currentIndex) next = (next + 1) % playlist.length;
+      setCurrentIndex(next);
+      return;
     }
+    setCurrentIndex((prev) => wrapIndex(prev, 1));
   };
 
   const prevSong = () => {
-    if (playMode === 'random') {
-      setCurrentIndex(Math.floor(Math.random() * playlist.length));
-    } else {
-      setCurrentIndex((prev) => (prev - 1 + playlist.length) % playlist.length);
+    if (playlist.length === 0) return;
+
+    const player = playerRef.current;
+    const time = playerReadyRef.current && player?.getCurrentTime
+      ? player.getCurrentTime() || 0
+      : currentTime;
+
+    // YouTube 行为：超过约 3 秒先回到开头，已在开头再切上一首
+    if (time > 3) {
+      if (playerReadyRef.current && player?.seekTo) player.seekTo(0, true);
+      setCurrentTime(0);
+      setProgress(0);
+      return;
     }
+
+    if (playMode === 'random') {
+      if (playlist.length === 1) return;
+      let next = Math.floor(Math.random() * playlist.length);
+      if (next === currentIndex) next = (next + 1) % playlist.length;
+      setCurrentIndex(next);
+      return;
+    }
+    setCurrentIndex((prev) => wrapIndex(prev, -1));
   };
 
-  // 🌟 6. 暴露直接播放指定歌曲的方法
   const playSong = (index: number) => {
     setCurrentIndex(index);
-    if (!isPlaying) setIsPlaying(true); // 保证切歌后自动播放
-  };
-
-  const handleTimeUpdate = () => {
-    if (audioRef.current) {
-      const { currentTime, duration } = audioRef.current;
-      setCurrentTime(currentTime);
-      setDuration(duration || 0);
-      setProgress((currentTime / (duration || 1)) * 100);
-
-      if (lyrics.length > 0) {
-        const activeLyric = lyrics.slice().reverse().find(l => currentTime >= l.time);
-        if (activeLyric && activeLyric.text !== currentLyric) {
-          setCurrentLyric(activeLyric.text);
-        }
-      }
-    }
-  };
-
-  // 🌟 7. 处理歌曲结束
-  const handleEnded = () => {
-    if (playMode === 'single' && audioRef.current) {
-       audioRef.current.currentTime = 0;
-       audioRef.current.play();
-    } else {
-       nextSong();
-    }
+    setIsPlaying(true);
   };
 
   const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newProgress = Number(e.target.value);
     setProgress(newProgress);
-    if (audioRef.current && audioRef.current.duration) {
-      audioRef.current.currentTime = (newProgress / 100) * audioRef.current.duration;
+    const player = playerRef.current;
+    if (playerReadyRef.current && player?.seekTo && duration) {
+      player.seekTo((newProgress / 100) * duration, true);
     }
   };
 
@@ -232,32 +322,34 @@ export function MusicProvider({ children }: { children: ReactNode }) {
   const toggleMute = () => setIsMuted(!isMuted);
 
   const togglePlayMode = () => {
-    setPlayMode(prev => {
+    setPlayMode((prev) => {
       if (prev === 'loop') return 'single';
       if (prev === 'single') return 'random';
       return 'loop';
     });
   };
 
+  const toggleShuffle = () => {
+    setPlayMode((prev) => (prev === 'random' ? 'loop' : 'random'));
+  };
+
   const currentSong = playlist[currentIndex];
 
   return (
     <MusicContext.Provider value={{
-        playlist, currentIndex, currentSong, isPlaying, progress, currentTime, duration, currentLyric, isLoading,
-        volume, isMuted, playMode, // 暴露新状态
-        togglePlay, nextSong, prevSong, handleSeek,
-        playSong, setVolume, toggleMute, togglePlayMode // 暴露新方法
+      playlist, currentIndex, currentSong, isPlaying, progress, currentTime, duration, currentLyric, isLoading,
+      volume, isMuted, playMode, isShuffle: playMode === 'random',
+      togglePlay, nextSong, prevSong, handleSeek,
+      playSong, setVolume, toggleMute, togglePlayMode, toggleShuffle,
     }}>
       {children}
-      {currentSong && (
-        <audio
-          ref={audioRef}
-          src={currentSong.src}
-          onTimeUpdate={handleTimeUpdate}
-          onEnded={handleEnded} // 使用我们重写的结束处理
-          onLoadedMetadata={handleTimeUpdate}
-        />
-      )}
+      <div
+        aria-hidden
+        className="pointer-events-none fixed bottom-0 left-0 z-[-1] overflow-hidden"
+        style={{ width: 1, height: 1, opacity: 0.01 }}
+      >
+        <div ref={containerRef} />
+      </div>
     </MusicContext.Provider>
   );
 }

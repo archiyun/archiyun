@@ -19,11 +19,20 @@ export const siteConfig = {
   defaultPostCover: "https://github.com/archiyun.png",
   photoWallImage: "https://github.com/archiyun.png",
   cloudMusicIds: [] as string[],
+  youtubeMusicIds: [
+    "https://music.youtube.com/watch?v=3EcPGUyzujc",
+    "https://music.youtube.com/watch?v=UdPF2TAU9RQ",
+    "https://music.youtube.com/watch?v=cUiqPvPnRII",
+    "https://music.youtube.com/watch?v=bdn6XFdVOWM",
+    "https://music.youtube.com/watch?v=Iupq4GUgiQ8",
+    "https://music.youtube.com/watch?v=S0GgBcNKK5g",
+    "https://music.youtube.com/watch?v=8tbD2TpKpiI",
+    "https://music.youtube.com/playlist?list=PLZCfAvgzDjXtnTvVQK5k3haUkhZqaME9z",
+  ],
 
   social: {
     github: "https://github.com/archiyun",
-    gitee: "",
-    google: "",
+    google: "https://www.google.com/",
     email: "furina.see.fun@gmail.com",
     qq: "",
     wechat: "",

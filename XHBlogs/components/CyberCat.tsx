@@ -11,6 +11,22 @@ export default function CyberCat() {
   const [isThinking, setIsThinking] = useState(false);
 
   const chatTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const didDragRef = useRef(false);
+  const [dragBounds, setDragBounds] = useState({ left: 0, right: 0, top: 0, bottom: 0 });
+
+  useEffect(() => {
+    const updateBounds = () => {
+      setDragBounds({
+        left: -(window.innerWidth - 200),
+        right: 64,
+        top: -(window.innerHeight - 260),
+        bottom: 64,
+      });
+    };
+    updateBounds();
+    window.addEventListener('resize', updateBounds);
+    return () => window.removeEventListener('resize', updateBounds);
+  }, []);
 
   // --- 💬 说话功能 ---
   const speak = (text: string, duration = 6000) => {
@@ -23,9 +39,9 @@ export default function CyberCat() {
 
   // --- 🖱️ 交互事件：摸猫猫 ---
   const handlePetCat = () => {
-    if (isPetted) return;
+    if (didDragRef.current || isPetted) return;
     setIsPetted(true);
-    speak("呼噜噜... 摸得本喵很舒服喵~", 2000);
+    speak("嘿嘿……被戳到了。系统运行良好~", 2000);
     setTimeout(() => {
       setIsPetted(false);
     }, 2000);
@@ -38,13 +54,13 @@ export default function CyberCat() {
 
     setShowInput(false); // 喂食时关掉输入框
     setIsThinking(true);
-    speak("嗷呜！真好吃喵！本喵吃饱了要说两句...", 6000);
+    speak("收到补丁啦！人家这就安装……", 6000);
 
     try {
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: "我刚刚喂了你一条美味的小鱼干！你有什么表示？" }),
+        body: JSON.stringify({ message: "我刚刚给你投喂了一份 Windows 更新补丁！你有什么表示？" }),
       });
 
       if (!res.ok) throw new Error('API Error');
@@ -52,7 +68,7 @@ export default function CyberCat() {
       const data = await res.json();
       speak(data.reply, 8000);
     } catch (error) {
-      speak("吧唧吧唧... 鱼干好吃，但本喵卡壳了喵...", 4000);
+      speak("安装失败……是不是没连上更新服务器？", 4000);
     } finally {
       setIsThinking(false);
     }
@@ -67,7 +83,7 @@ export default function CyberCat() {
     setInputValue('');
     setShowInput(false);
     setIsThinking(true);
-    speak("让本喵想想喵...", 10000);
+    speak("让人家想想……", 10000);
 
     try {
       const res = await fetch('/api/chat', {
@@ -81,7 +97,7 @@ export default function CyberCat() {
       const data = await res.json();
       speak(data.reply, 8000);
     } catch (error) {
-      speak("铲屎官的网线被老鼠咬断了吧？喵！", 4000);
+      speak("网络超时了啦，检查一下网线好不好？", 4000);
     } finally {
       setIsThinking(false);
     }
@@ -90,11 +106,11 @@ export default function CyberCat() {
   // --- ⏳ 随机挂机语录 ---
   useEffect(() => {
     const randomBarks = [
-      "喵呜~ 今天天气真不错喵~",
-      "好困哦，想睡觉喵...",
-      "铲屎官，快去敲代码！",
-      "我的小鱼干藏哪里去了？",
-      "怎么没人理本喵...",
+      "今天也要保持系统流畅哦。",
+      "有人点开始菜单了吗？",
+      "别老蓝屏……人家才不会蓝屏。",
+      "更新一下会更香的。",
+      "主人，代码写完再摸人家啦。",
     ];
     const randomTalkInterval = setInterval(() => {
       if (!speech && !showInput && !isThinking && Math.random() > 0.8) {
@@ -110,10 +126,14 @@ export default function CyberCat() {
   return (
     <motion.div
       drag
-      dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
-      dragElastic={0.1}
-      whileDrag={{ scale: 1.1, cursor: "grabbing" }}
-      className="fixed bottom-20 right-20 z-[9999] flex flex-col items-center group cursor-grab active:cursor-grabbing"
+      dragMomentum={false}
+      dragElastic={0.12}
+      dragConstraints={dragBounds}
+      onDragStart={() => { didDragRef.current = true; }}
+      onDragEnd={() => { setTimeout(() => { didDragRef.current = false; }, 80); }}
+      whileDrag={{ scale: 1.06, cursor: "grabbing" }}
+      className="fixed bottom-20 right-20 z-[9999] flex flex-col items-center group cursor-grab active:cursor-grabbing select-none"
+      style={{ touchAction: 'none' }}
     >
       {/* 💬 聊天气泡 */}
       <div className="relative w-full flex justify-center mb-6">
@@ -159,49 +179,50 @@ export default function CyberCat() {
               onClick={handleFeed}
               disabled={isThinking}
               className={`bg-white/90 dark:bg-slate-700/90 p-2.5 rounded-full shadow-md hover:scale-110 active:scale-95 transition-transform border border-gray-100 dark:border-slate-600 flex items-center justify-center backdrop-blur-sm ${isThinking ? 'opacity-50 cursor-not-allowed' : ''}`}
-              title="喂小鱼干"
+              title="投喂更新"
             >
-              <span className="text-xl leading-none">🐟</span>
+              <span className="text-xl leading-none">🪟</span>
             </button>
         </div>
 
-        {/* 猫咪图片容器 */}
+        {/* Win11娘像素桌宠 */}
         <div
-          className="w-[120px] h-[120px] relative cursor-pointer"
+          className="w-[128px] h-[128px] relative cursor-pointer"
           onClick={handlePetCat}
         >
           <style>{`
-            .cat-sprite {
+            .win11-sprite {
               width: 100%;
               height: 100%;
-              background-image: url('/siamese-cat.png'); 
-              background-size: 300% 300%; 
+              background-image: url('/win11-musume-sprites.png');
+              background-size: 300% 300%;
               background-repeat: no-repeat;
-              image-rendering: pixelated; 
+              image-rendering: pixelated;
+              image-rendering: crisp-edges;
+              filter: drop-shadow(0 6px 10px rgba(15, 23, 42, 0.28));
             }
-            .cat-idle {
-              animation: idle-frames 1.2s infinite;
-              background-position-y: 0%; 
+            .win11-idle {
+              animation: win11-idle-frames 1.05s steps(1) infinite;
+              background-position-y: 0%;
             }
-            .cat-petted {
-              animation: pet-frames 0.8s infinite;
-              background-position-y: 50%; 
+            .win11-petted {
+              animation: win11-idle-frames 0.55s steps(1) infinite;
+              background-position-y: 50%;
             }
-            .cat-thinking {
-              animation: idle-frames 0.6s infinite;
-              background-position-y: 0%; 
+            .win11-thinking {
+              animation: win11-idle-frames 0.7s steps(1) infinite;
+              background-position-y: 100%;
             }
-            @keyframes idle-frames {
-              0%, 33.32% { background-position-x: 0%; }
-              33.33%, 66.65% { background-position-x: 50%; }
-              66.66%, 100% { background-position-x: 100%; }
-            }
-            @keyframes pet-frames {
-              0%, 49.99% { background-position-x: 0%; }
-              50%, 100% { background-position-x: 50%; }
+            @keyframes win11-idle-frames {
+              0%, 32.99% { background-position-x: 0%; }
+              33%, 65.99% { background-position-x: 50%; }
+              66%, 100% { background-position-x: 100%; }
             }
           `}</style>
-          <div className={`cat-sprite drop-shadow-2xl ${isPetted ? 'cat-petted' : isThinking ? 'cat-thinking' : 'cat-idle'}`} />
+          <div
+            className={`win11-sprite ${isPetted ? 'win11-petted' : isThinking ? 'win11-thinking' : 'win11-idle'}`}
+            aria-label="Win11娘"
+          />
         </div>
       </div>
 
