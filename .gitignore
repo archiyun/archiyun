@@ -1,41 +1,37 @@
-# Nuxt dev/build outputs
-.output
-.data
-.nuxt
-.nitro
-.cache
-dist
-
-# Node dependencies
+# Dependencies
 node_modules
+
+# Next.js
+.next
+out
+
+# Build
+dist
+build
 
 # Logs
 logs
 *.log
+npm-debug.log*
 
-# editor
-.vscode
-.zed
-
-# Misc
-.DS_Store
-.fleet
-.idea
-
-# Local env files
+# Env
 .env
 .env.*
 !.env.example
 
-# Custom
+# Editor
+.vscode
+.idea
+.zed
+.DS_Store
+
+# Misc
 .vercel
-content/posts/test.md
-
-# Design source bundle + heavy derived artifact (kept locally as reference only)
-ARSENOVA Blog.html
-docs/design/prototype/index.html
-
-# AI
 .codex
 .claude
 .agent
+
+# Python
+__pycache__
+*.pyc
+.venv
